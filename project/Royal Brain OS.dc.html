@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; }
+  .rb-scroll::-webkit-scrollbar { display: none; width: 0; height: 0; }
+  .rb-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+  @keyframes rbFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes rbPulse { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
+</style>
+</helmet>
+
+<div style="min-height: 100vh; width: 100%; background: radial-gradient(120% 90% at 50% -10%, #1a1726 0%, #0a0a0f 55%); display: flex; align-items: center; justify-content: center; padding: 28px 16px; font-family: 'Schibsted Grotesk', sans-serif;">
+
+  <div style="width: 390px; max-width: 100%; height: 800px; background: #0c0c12; border-radius: 42px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 50px 120px -30px rgba(0,0,0,0.9), 0 0 0 11px #050507, 0 0 0 12px rgba(201,162,75,0.18); overflow: hidden; position: relative; display: flex; flex-direction: column;">
+
+    <!-- status bar -->
+    <div style="height: 46px; flex: 0 0 46px; display: flex; align-items: center; justify-content: space-between; padding: 0 26px; color: #f4f2ec; font-size: 13px; font-weight: 600; letter-spacing: .02em; z-index: 5;">
+      <span>9:41</span>
+      <div style="display: flex; align-items: center; gap: 6px; opacity: .9;">
+        <span style="font-size: 11px; letter-spacing: .14em; color: #c9a24b;">PRIVATE</span>
+        <span style="width: 5px; height: 5px; border-radius: 50%; background: #c9a24b; display: inline-block;"></span>
+      </div>
+    </div>
+
+    <!-- scrollable content -->
+    <div class="rb-scroll" style="flex: 1 1 auto; overflow-y: auto; overflow-x: hidden; padding: 0 18px 120px;">
+
+      <!-- ============ TODAY ============ -->
+      <sc-if value="{{ isToday }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 18px;">
+          <div style="font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #7a7a88;">Friday · June 27</div>
+          <div style="font-family: 'Instrument Serif', serif; font-size: 38px; line-height: 1.05; color: #f4f2ec; margin-top: 4px;">Good morning, <span style="font-style: italic; color: #c9a24b;">Rajul</span></div>
+        </div>
+
+        <!-- AI summary card -->
+        <div style="background: linear-gradient(160deg, #1d1830 0%, #14131c 100%); border: 1px solid rgba(201,162,75,0.22); border-radius: 22px; padding: 18px; margin-bottom: 14px;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+            <span style="width: 26px; height: 26px; border-radius: 8px; background: #c9a24b; color: #14131c; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px;">R</span>
+            <span style="font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #b69a55;">Royal Brain · Today</span>
+          </div>
+          <div style="font-size: 16px; line-height: 1.5; color: #e9e6dc;">Your energy looks medium today. Work pressure is high. Start with the most important task before checking unnecessary messages.</div>
+        </div>
+
+        <!-- status grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+          <sc-for list="{{ statusItems }}" as="s" hint-placeholder-count="4">
+            <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 14px;">
+              <div style="font-size: 12px; color: #7a7a88; margin-bottom: 8px;">{{ s.label }}</div>
+              <div style="display: flex; align-items: center; gap: 7px;">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: {{ s.color }};"></span>
+                <span style="font-size: 16px; font-weight: 600; color: #f4f2ec;">{{ s.value }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- priorities -->
+        <div style="font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #7a7a88; margin: 4px 4px 10px;">Top 3 priorities</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+          <sc-for list="{{ priorities }}" as="p" hint-placeholder-count="3">
+            <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; gap: 12px;">
+              <span style="width: 24px; height: 24px; flex: 0 0 24px; border-radius: 8px; background: rgba(201,162,75,0.14); color: #c9a24b; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700;">{{ p.n }}</span>
+              <span style="flex: 1; font-size: 15px; color: #e9e6dc;">{{ p.text }}</span>
+              <span style="font-size: 11px; color: #7a7a88;">{{ p.tag }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- risk warning -->
+        <div style="background: rgba(196,116,72,0.10); border: 1px solid rgba(196,116,72,0.30); border-radius: 18px; padding: 14px 16px; margin-bottom: 18px; display: flex; gap: 12px; align-items: flex-start;">
+          <span style="width: 22px; height: 22px; flex: 0 0 22px; border-radius: 50%; border: 1.5px solid #c47448; color: #d98a5a; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 1px;">!</span>
+          <div>
+            <div style="font-size: 14px; font-weight: 600; color: #e3a878;">Sleep is below your usual</div>
+            <div style="font-size: 13px; color: #b89b86; line-height: 1.45; margin-top: 2px;">You slept 5h 20m. Try to rest earlier tonight so tomorrow feels lighter.</div>
+          </div>
+        </div>
+
+        <!-- quick actions -->
+        <div style="font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #7a7a88; margin: 4px 4px 10px;">Quick actions</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <sc-for list="{{ todayActions }}" as="a" hint-placeholder-count="5">
+            <div onClick="{{ a.onTap }}" style="background: #14131c; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px 14px; cursor: pointer; display: flex; flex-direction: column; gap: 10px;" style-hover="{{ hoverCard }}">
+              <span style="font-size: 18px;">{{ a.glyph }}</span>
+              <span style="font-size: 14px; font-weight: 500; color: #e9e6dc;">{{ a.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ AI TALK ============ -->
+      <sc-if value="{{ isTalk }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 16px;">
+          <div style="font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #7a7a88;">Personal AI</div>
+          <div style="font-family: 'Instrument Serif', serif; font-size: 34px; color: #f4f2ec; margin-top: 2px;">AI Talk Room</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px;">
+          <sc-for list="{{ messages }}" as="m" hint-placeholder-count="3">
+            <sc-if value="{{ m.isAi }}" hint-placeholder-val="{{ true }}">
+              <div style="align-self: flex-start; max-width: 86%; background: #14131c; border: 1px solid rgba(201,162,75,0.18); border-radius: 18px 18px 18px 6px; padding: 13px 15px;">
+                <div style="font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #b69a55; margin-bottom: 6px;">Royal Brain</div>
+                <div style="font-size: 15px; line-height: 1.5; color: #e9e6dc;">{{ m.text }}</div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ m.isUser }}" hint-placeholder-val="{{ true }}">
+              <div style="align-self: flex-end; max-width: 86%; background: #2a2440; border: 1px solid rgba(255,255,255,0.08); border-radius: 18px 18px 6px 18px; padding: 13px 15px; font-size: 15px; line-height: 1.5; color: #f4f2ec;">{{ m.text }}</div>
+            </sc-if>
+          </sc-for>
+        </div>
+
+        <!-- save-to-memory privacy prompt -->
+        <sc-if value="{{ showSavePrompt }}" hint-placeholder-val="{{ false }}">
+          <div style="background: rgba(108,92,231,0.10); border: 1px solid rgba(108,92,231,0.35); border-radius: 18px; padding: 15px; margin-bottom: 14px;">
+            <div style="font-size: 14px; color: #cfc6f5; line-height: 1.45; margin-bottom: 12px;">This talk feels personal. Do you want to save it to long-term memory?</div>
+            <div style="display: flex; gap: 8px;">
+              <span onClick="{{ confirmSave }}" style="flex: 1; text-align: center; background: #6c5ce7; color: #fff; border-radius: 12px; padding: 11px; font-size: 14px; font-weight: 600; cursor: pointer;">Save to memory</span>
+              <span onClick="{{ dismissSave }}" style="flex: 1; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.14); color: #b9b4c9; border-radius: 12px; padding: 11px; font-size: 14px; cursor: pointer;">Keep private</span>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- action chips -->
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
+          <sc-for list="{{ talkChips }}" as="c" hint-placeholder-count="5">
+            <span onClick="{{ c.onTap }}" style="background: #131319; border: 1px solid rgba(255,255,255,0.09); color: #c8c4d0; border-radius: 999px; padding: 9px 14px; font-size: 13px; cursor: pointer;" style-hover="{{ hoverChip }}">{{ c.label }}</span>
+          </sc-for>
+        </div>
+        <sc-if value="{{ talkToast }}" hint-placeholder-val="{{ false }}">
+          <div style="text-align: center; font-size: 13px; color: #c9a24b; margin-bottom: 14px;">{{ talkToast }}</div>
+        </sc-if>
+
+        <!-- input -->
+        <div style="display: flex; align-items: center; gap: 8px; background: #14131c; border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 7px 7px 7px 16px;">
+          <input value="{{ input }}" onChange="{{ onInput }}" placeholder="Tell your Brain anything..." style="flex: 1; background: transparent; border: none; outline: none; color: #f4f2ec; font-size: 15px; font-family: 'Schibsted Grotesk', sans-serif;" />
+          <span style="width: 40px; height: 40px; flex: 0 0 40px; border-radius: 14px; background: #1d1b28; border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; color: #c9a24b; cursor: pointer; font-size: 16px;">🎙</span>
+          <span onClick="{{ sendMsg }}" style="width: 40px; height: 40px; flex: 0 0 40px; border-radius: 14px; background: #c9a24b; color: #14131c; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 700; font-size: 18px;">↑</span>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ DAILY RECORD ============ -->
+      <sc-if value="{{ isRecord }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 16px;">
+          <div style="font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #7a7a88;">Friday · June 27</div>
+          <div style="font-family: 'Instrument Serif', serif; font-size: 34px; color: #f4f2ec; margin-top: 2px;">Daily Record</div>
+          <div style="font-size: 14px; color: #8a8a98; margin-top: 4px;">A few minutes to remember today.</div>
+        </div>
+
+        <!-- level pickers -->
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <sc-for list="{{ levelFields }}" as="f" hint-placeholder-count="3">
+            <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 15px;">
+              <div style="font-size: 14px; color: #e9e6dc; margin-bottom: 11px;">{{ f.label }}</div>
+              <div style="display: flex; gap: 8px;">
+                <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="3">
+                  <span onClick="{{ o.onTap }}" style="flex: 1; text-align: center; padding: 10px 4px; border-radius: 12px; font-size: 13px; cursor: pointer; border: 1px solid {{ o.border }}; background: {{ o.bg }}; color: {{ o.fg }};">{{ o.label }}</span>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- text fields -->
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
+          <sc-for list="{{ recordFields }}" as="r" hint-placeholder-count="4">
+            <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 15px;">
+              <div style="font-size: 12px; letter-spacing: .04em; color: #7a7a88; margin-bottom: 8px;">{{ r.label }}</div>
+              <input placeholder="{{ r.placeholder }}" style="width: 100%; background: transparent; border: none; outline: none; color: #f4f2ec; font-size: 15px; font-family: 'Schibsted Grotesk', sans-serif;" />
+            </div>
+          </sc-for>
+        </div>
+
+        <div onClick="{{ saveRecord }}" style="margin-top: 16px; text-align: center; background: #c9a24b; color: #14131c; border-radius: 16px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer;">Save today's record</div>
+        <sc-if value="{{ recordToast }}" hint-placeholder-val="{{ false }}">
+          <div style="text-align: center; font-size: 13px; color: #c9a24b; margin-top: 12px;">{{ recordToast }}</div>
+        </sc-if>
+      </div>
+      </sc-if>
+
+      <!-- ============ ROOMS DIRECTORY ============ -->
+      <sc-if value="{{ isRooms }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 16px;">
+          <div style="font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #7a7a88;">Your digital home</div>
+          <div style="font-family: 'Instrument Serif', serif; font-size: 34px; color: #f4f2ec; margin-top: 2px;">All Rooms</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <sc-for list="{{ rooms }}" as="r" hint-placeholder-count="16">
+            <div onClick="{{ r.onTap }}" style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 15px; cursor: pointer; min-height: 108px; display: flex; flex-direction: column; justify-content: space-between;" style-hover="{{ hoverCard }}">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-size: 20px;">{{ r.glyph }}</span>
+                <sc-if value="{{ r.locked }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; color: #7a7a88;">🔒</span></sc-if>
+              </div>
+              <div>
+                <div style="font-size: 14px; font-weight: 600; color: #f4f2ec;">{{ r.name }}</div>
+                <div style="font-size: 11px; color: #7a7a88; margin-top: 3px; line-height: 1.35;">{{ r.desc }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ MEMORY LIBRARY ============ -->
+      <sc-if value="{{ isMemory }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 16px; display: flex; align-items: flex-end; justify-content: space-between;">
+          <div>
+            <div style="font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #7a7a88;">What I remember</div>
+            <div style="font-family: 'Instrument Serif', serif; font-size: 34px; color: #f4f2ec; margin-top: 2px;">Memory Library</div>
+          </div>
+          <span onClick="{{ goRooms }}" style="font-size: 13px; color: #c9a24b; cursor: pointer; padding-bottom: 8px;">Rooms</span>
+        </div>
+
+        <!-- AI suggestion -->
+        <div style="background: rgba(108,92,231,0.10); border: 1px solid rgba(108,92,231,0.30); border-radius: 18px; padding: 14px; margin-bottom: 14px; display: flex; gap: 12px; align-items: flex-start;">
+          <span style="font-size: 16px;">✨</span>
+          <div style="flex: 1;">
+            <div style="font-size: 13px; color: #cfc6f5; line-height: 1.45;">From today's record, I found a possible new memory: <b style="color:#fff;">"You focus best in the early morning."</b></div>
+            <div style="display: flex; gap: 8px; margin-top: 10px;">
+              <span onClick="{{ memAccept }}" style="background: #6c5ce7; color: #fff; border-radius: 10px; padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer;">Save memory</span>
+              <span onClick="{{ memDismiss }}" style="border: 1px solid rgba(255,255,255,0.14); color: #b9b4c9; border-radius: 10px; padding: 8px 14px; font-size: 13px; cursor: pointer;">Not now</span>
+            </div>
+          </div>
+        </div>
+        <sc-if value="{{ memToast }}" hint-placeholder-val="{{ false }}"><div style="text-align:center; font-size:13px; color:#c9a24b; margin-bottom:14px;">{{ memToast }}</div></sc-if>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <sc-for list="{{ memories }}" as="m" hint-placeholder-count="5">
+            <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 15px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px;">
+                <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: {{ m.typeColor }};">{{ m.type }}</span>
+                <span style="font-size: 11px; color: #7a7a88;">{{ m.date }}</span>
+              </div>
+              <div style="font-size: 15px; color: #f4f2ec; line-height: 1.4;">{{ m.title }}</div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                <span style="font-size: 11px; color: #7a7a88;">{{ m.privacy }}</span>
+                <span style="font-size: 11px; color: #7a7a88;">·</span>
+                <span style="font-size: 11px; color: #8a8a98;">Confidence {{ m.confidence }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ FAMILY HUB ============ -->
+      <sc-if value="{{ isFamily }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 16px; display: flex; align-items: flex-end; justify-content: space-between;">
+          <div>
+            <div style="font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #7a7a88;">People I love</div>
+            <div style="font-family: 'Instrument Serif', serif; font-size: 34px; color: #f4f2ec; margin-top: 2px;">Family Hub</div>
+          </div>
+          <span onClick="{{ goRooms }}" style="font-size: 13px; color: #c9a24b; cursor: pointer; padding-bottom: 8px;">Rooms</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <sc-for list="{{ family }}" as="f" hint-placeholder-count="4">
+            <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 14px; display: flex; align-items: center; gap: 14px; cursor: pointer;" style-hover="{{ hoverCard }}">
+              <span style="width: 52px; height: 52px; flex: 0 0 52px; border-radius: 16px; background: {{ f.avatarBg }}; color: #14131c; display: flex; align-items: center; justify-content: center; font-family: 'Instrument Serif', serif; font-size: 22px;">{{ f.initial }}</span>
+              <div style="flex: 1;">
+                <div style="font-size: 16px; font-weight: 600; color: #f4f2ec;">{{ f.name }}</div>
+                <div style="font-size: 12px; color: #8a8a98; margin-top: 2px;">{{ f.relation }} · {{ f.note }}</div>
+              </div>
+              <span style="font-size: 11px; color: #c9a24b; text-align: right; line-height: 1.4;">{{ f.next }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ DECISION ROOM ============ -->
+      <sc-if value="{{ isDecision }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 16px; display: flex; align-items: flex-end; justify-content: space-between;">
+          <div>
+            <div style="font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #7a7a88;">Think before you act</div>
+            <div style="font-family: 'Instrument Serif', serif; font-size: 34px; color: #f4f2ec; margin-top: 2px;">Decision Room</div>
+          </div>
+          <span onClick="{{ goRooms }}" style="font-size: 13px; color: #c9a24b; cursor: pointer; padding-bottom: 8px;">Rooms</span>
+        </div>
+
+        <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; padding: 18px; margin-bottom: 14px;">
+          <div style="font-size: 12px; color: #7a7a88; margin-bottom: 4px;">Current decision</div>
+          <div style="font-size: 19px; color: #f4f2ec; line-height: 1.3;">Should I buy a new work laptop this month?</div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px;">
+            <sc-for list="{{ decisionImpacts }}" as="d" hint-placeholder-count="4">
+              <div style="background: #0e0e15; border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 12px;">
+                <div style="font-size: 11px; color: #7a7a88;">{{ d.label }}</div>
+                <div style="font-size: 14px; font-weight: 600; color: {{ d.color }}; margin-top: 4px;">{{ d.value }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display: flex; gap: 10px; margin-top: 14px;">
+            <div style="flex: 1; background: rgba(196,116,72,0.10); border: 1px solid rgba(196,116,72,0.28); border-radius: 14px; padding: 12px; text-align: center;">
+              <div style="font-size: 11px; color: #d98a5a;">Risk score</div>
+              <div style="font-size: 24px; font-family: 'Instrument Serif', serif; color: #e3a878;">4 / 10</div>
+            </div>
+            <div style="flex: 1; background: rgba(94,164,120,0.10); border: 1px solid rgba(94,164,120,0.28); border-radius: 14px; padding: 12px; text-align: center;">
+              <div style="font-size: 11px; color: #7fc79a;">Benefit score</div>
+              <div style="font-size: 24px; font-family: 'Instrument Serif', serif; color: #8fd6aa;">7 / 10</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: linear-gradient(160deg, #1d1830 0%, #14131c 100%); border: 1px solid rgba(201,162,75,0.22); border-radius: 18px; padding: 16px; margin-bottom: 14px;">
+          <div style="font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #b69a55; margin-bottom: 8px;">AI advice</div>
+          <div style="font-size: 15px; line-height: 1.5; color: #e9e6dc;">The benefit is real, but money pressure is high this month. A good middle path: decide a clear budget, then wait two weeks. You make the final call.</div>
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+          <span style="flex: 1; text-align: center; background: #c9a24b; color: #14131c; border-radius: 14px; padding: 13px; font-size: 14px; font-weight: 700; cursor: pointer;">Decide later</span>
+          <span style="flex: 1; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.14); color: #c8c4d0; border-radius: 14px; padding: 13px; font-size: 14px; cursor: pointer;">Record choice</span>
+        </div>
+        <div style="text-align: center; font-size: 12px; color: #7a7a88; margin-top: 12px;">The AI can advise. You always make the final decision.</div>
+      </div>
+      </sc-if>
+
+      <!-- ============ FINANCE ============ -->
+      <sc-if value="{{ isFinance }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 16px; display: flex; align-items: flex-end; justify-content: space-between;">
+          <div>
+            <div style="font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #7a7a88;">This month</div>
+            <div style="font-family: 'Instrument Serif', serif; font-size: 34px; color: #f4f2ec; margin-top: 2px;">Finance Center</div>
+          </div>
+          <span onClick="{{ goRooms }}" style="font-size: 13px; color: #c9a24b; cursor: pointer; padding-bottom: 8px;">Rooms</span>
+        </div>
+
+        <div style="background: linear-gradient(160deg, #1d1830 0%, #14131c 100%); border: 1px solid rgba(201,162,75,0.20); border-radius: 22px; padding: 20px; margin-bottom: 14px;">
+          <div style="font-size: 13px; color: #b69a55;">Money left this month</div>
+          <div style="font-family: 'Instrument Serif', serif; font-size: 44px; color: #f4f2ec; margin: 4px 0 14px;">৳ 28,400</div>
+          <div style="height: 8px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden;">
+            <div style="height: 100%; width: 64%; background: #c9a24b; border-radius: 999px;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: #8a8a98;">
+            <span>Spent ৳ 51,600</span>
+            <span>Budget ৳ 80,000</span>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+          <sc-for list="{{ financeStats }}" as="f" hint-placeholder-count="4">
+            <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 15px;">
+              <div style="font-size: 12px; color: #7a7a88;">{{ f.label }}</div>
+              <div style="font-size: 20px; font-weight: 600; color: {{ f.color }}; margin-top: 6px;">{{ f.value }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="background: linear-gradient(160deg, #1d1830 0%, #14131c 100%); border: 1px solid rgba(201,162,75,0.22); border-radius: 18px; padding: 16px;">
+          <div style="font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #b69a55; margin-bottom: 8px;">AI money advice</div>
+          <div style="font-size: 15px; line-height: 1.5; color: #e9e6dc;">Most of your spending this month was on food delivery. Cooking at home twice a week could save around ৳ 6,000.</div>
+          <div style="font-size: 12px; color: #7a7a88; margin-top: 10px;">The AI never moves your money. It only helps you understand it.</div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ PRIVATE ROOM ============ -->
+      <sc-if value="{{ isPrivate }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 16px; display: flex; align-items: flex-end; justify-content: space-between;">
+          <div>
+            <div style="font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #7a7a88;">Only for you</div>
+            <div style="font-family: 'Instrument Serif', serif; font-size: 34px; color: #f4f2ec; margin-top: 2px;">Private Room</div>
+          </div>
+          <span onClick="{{ goRooms }}" style="font-size: 13px; color: #c9a24b; cursor: pointer; padding-bottom: 8px;">Rooms</span>
+        </div>
+
+        <sc-if value="{{ privateLocked }}" hint-placeholder-val="{{ true }}">
+          <div style="background: #131319; border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 32px 22px; text-align: center; margin-top: 10px;">
+            <div style="width: 64px; height: 64px; margin: 0 auto 18px; border-radius: 22px; background: rgba(201,162,75,0.12); display: flex; align-items: center; justify-content: center; font-size: 28px;">🔒</div>
+            <div style="font-size: 18px; color: #f4f2ec; font-weight: 600;">This room is locked</div>
+            <div style="font-size: 14px; color: #8a8a98; margin-top: 8px; line-height: 1.5; max-width: 260px; margin-left: auto; margin-right: auto;">This room holds your deepest, most private notes. Enter your PIN to open it.</div>
+            <div style="display: flex; gap: 10px; justify-content: center; margin: 22px 0;">
+              <sc-for list="{{ pinDots }}" as="d" hint-placeholder-count="4">
+                <span style="width: 14px; height: 14px; border-radius: 50%; background: {{ d.bg }}; border: 1px solid rgba(255,255,255,0.2);"></span>
+              </sc-for>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 240px; margin: 0 auto;">
+              <sc-for list="{{ keypad }}" as="k" hint-placeholder-count="12">
+                <span onClick="{{ k.onTap }}" style="aspect-ratio: 1.6; display: flex; align-items: center; justify-content: center; background: #1a1922; border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; font-size: 20px; color: #f4f2ec; cursor: pointer;">{{ k.label }}</span>
+              </sc-for>
+            </div>
+            <div style="font-size: 12px; color: #7a7a88; margin-top: 18px;">Tip: any 4 digits unlock this demo.</div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ privateOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="background: rgba(108,92,231,0.10); border: 1px solid rgba(108,92,231,0.30); border-radius: 18px; padding: 14px; margin-bottom: 14px;">
+            <div style="font-size: 13px; color: #cfc6f5; line-height: 1.45;">This room contains highly private information. AI analysis will only start after your permission.</div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px;">
+            <sc-for list="{{ privateEntries }}" as="e" hint-placeholder-count="3">
+              <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 15px;">
+                <div style="font-size: 12px; color: #7a7a88; margin-bottom: 6px;">{{ e.date }}</div>
+                <div style="font-size: 15px; color: #e9e6dc; line-height: 1.5;">{{ e.text }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <sc-for list="{{ privateActions }}" as="a" hint-placeholder-count="4">
+              <div style="background: #14131c; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 14px; font-size: 14px; color: #e9e6dc; cursor: pointer; display: flex; align-items: center; gap: 10px;" style-hover="{{ hoverCard }}"><span>{{ a.glyph }}</span><span>{{ a.label }}</span></div>
+            </sc-for>
+          </div>
+          <div onClick="{{ lockPrivate }}" style="margin-top: 14px; text-align: center; border: 1px solid rgba(255,255,255,0.14); color: #c8c4d0; border-radius: 14px; padding: 13px; font-size: 14px; cursor: pointer;">Lock room</div>
+        </sc-if>
+      </div>
+      </sc-if>
+
+      <!-- ============ SECURITY ============ -->
+      <sc-if value="{{ isSecurity }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 16px;">
+          <div style="font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #7a7a88;">You are in control</div>
+          <div style="font-family: 'Instrument Serif', serif; font-size: 34px; color: #f4f2ec; margin-top: 2px;">Security & Permissions</div>
+        </div>
+
+        <div style="background: rgba(94,164,120,0.10); border: 1px solid rgba(94,164,120,0.26); border-radius: 18px; padding: 14px 16px; margin-bottom: 14px; display: flex; gap: 12px; align-items: center;">
+          <span style="font-size: 18px;">🛡</span>
+          <div style="font-size: 14px; color: #9bd8b3;">Your data stays on your private space. Nothing is shared.</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+          <sc-for list="{{ toggles }}" as="t" hint-placeholder-count="5">
+            <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between;">
+              <div style="flex: 1; padding-right: 12px;">
+                <div style="font-size: 15px; color: #f4f2ec;">{{ t.label }}</div>
+                <div style="font-size: 12px; color: #7a7a88; margin-top: 2px; line-height: 1.4;">{{ t.desc }}</div>
+              </div>
+              <span onClick="{{ t.onTap }}" style="width: 48px; height: 28px; flex: 0 0 48px; border-radius: 999px; background: {{ t.trackBg }}; position: relative; cursor: pointer; transition: background .2s;">
+                <span style="position: absolute; top: 3px; left: {{ t.knobLeft }}; width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: left .2s;"></span>
+              </span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <sc-for list="{{ securityActions }}" as="a" hint-placeholder-count="4">
+            <div style="background: #14131c; border: 1px solid {{ a.border }}; border-radius: 16px; padding: 15px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer;" style-hover="{{ hoverCard }}">
+              <span style="font-size: 16px;">{{ a.glyph }}</span>
+              <span style="flex: 1; font-size: 15px; color: {{ a.color }};">{{ a.label }}</span>
+              <span style="color: #7a7a88;">›</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+    </div>
+
+    <!-- ============ BOTTOM NAV ============ -->
+    <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 84px; background: linear-gradient(to top, #0c0c12 60%, rgba(12,12,18,0)); display: flex; align-items: flex-start; justify-content: space-around; padding: 12px 12px 0; z-index: 10;">
+      <sc-for list="{{ navTabs }}" as="n" hint-placeholder-count="5">
+        <div onClick="{{ n.onTap }}" style="display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; flex: 1; padding-top: 6px;">
+          <span style="font-size: 20px; filter: {{ n.filter }}; opacity: {{ n.opacity }};">{{ n.glyph }}</span>
+          <span style="font-size: 10px; letter-spacing: .02em; color: {{ n.color }};">{{ n.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 430, &quot;height&quot;: 860}}">
+class Component extends DCLogic {
+  state = {
+    screen: 'today',
+    input: '',
+    messages: [
+      { role: 'ai', text: 'Good morning. Your sleep was a little short last night. How are you feeling before we plan the day?' },
+      { role: 'user', text: 'A bit tired but okay. I have a big vendor meeting later.' },
+      { role: 'ai', text: 'Understood. I remember these meetings drain your energy. Keep the morning light, and do your hardest task first while your focus is high.' },
+    ],
+    showSavePrompt: false,
+    talkToast: '',
+    recordToast: '',
+    memToast: '',
+    memHandled: false,
+    pinLen: 0,
+    privateLocked: true,
+    levels: {},
+  };
+
+  go = (s) => this.setState({ screen: s, talkToast: '', recordToast: '' });
+
+  setLevel = (field, idx) => this.setState(st => ({ levels: { ...st.levels, [field]: idx } }));
+
+  sendMsg = () => {
+    const t = (this.state.input || '').trim();
+    if (!t) return;
+    this.setState(st => ({
+      input: '',
+      showSavePrompt: true,
+      messages: [...st.messages,
+        { role: 'user', text: t },
+        { role: 'ai', text: 'Thank you for sharing that. I have noted how you feel. Would you like me to keep this in your long-term memory?' },
+      ],
+    }));
+  };
+
+  toast = (key, msg) => {
+    this.setState({ [key]: msg });
+    setTimeout(() => this.setState(st => (st[key] === msg ? { [key]: '' } : {})), 2200);
+  };
+
+  pressKey = (label) => {
+    if (label === '⌫') { this.setState(st => ({ pinLen: Math.max(0, st.pinLen - 1) })); return; }
+    if (label === '') return;
+    this.setState(st => {
+      const next = Math.min(4, st.pinLen + 1);
+      if (next === 4) { setTimeout(() => this.setState({ privateLocked: false, pinLen: 0 }), 180); }
+      return { pinLen: next };
+    });
+  };
+
+  renderVals() {
+    const s = this.state.screen;
+    const gold = '#c9a24b', muted = '#7a7a88';
+    const hoverCard = { borderColor: 'rgba(201,162,75,0.35)', background: '#181722' };
+    const hoverChip = { borderColor: 'rgba(201,162,75,0.4)', color: '#f4f2ec' };
+
+    const navDef = [
+      { key: 'today', label: 'Today', glyph: '◇' },
+      { key: 'talk', label: 'AI Talk', glyph: '✦' },
+      { key: 'record', label: 'Record', glyph: '✎' },
+      { key: 'rooms', label: 'Rooms', glyph: '▦' },
+      { key: 'security', label: 'Secure', glyph: '⛉' },
+    ];
+    const roomScreens = ['memory','family','decision','finance','private','vault','people','work','photos','google','risk','reports'];
+    const navTabs = navDef.map(n => {
+      const active = n.key === s || (n.key === 'rooms' && roomScreens.includes(s));
+      return { ...n, onTap: () => this.go(n.key),
+        color: active ? gold : muted,
+        opacity: active ? '1' : '0.55',
+        filter: active ? 'none' : 'grayscale(1)' };
+    });
+
+    const mkLevel = (field, opts, colors) => ({
+      label: field.label,
+      options: opts.map((o, i) => {
+        const sel = this.state.levels[field.key] === i;
+        return { label: o, onTap: () => this.setLevel(field.key, i),
+          bg: sel ? colors[i] + '22' : '#0e0e15',
+          border: sel ? colors[i] : 'rgba(255,255,255,0.06)',
+          fg: sel ? '#f4f2ec' : '#8a8a98' };
+      }),
+    });
+
+    const pinDots = [0,1,2,3].map(i => ({ bg: i < this.state.pinLen ? gold : 'transparent' }));
+    const keypad = ['1','2','3','4','5','6','7','8','9','','0','⌫'].map(label => ({
+      label, onTap: () => this.pressKey(label),
+    }));
+
+    const toggleDef = [
+      { key:'bio', label:'Unlock with Face / Fingerprint', desc:'Use biometrics to open private rooms.', on:true },
+      { key:'ai', label:'Let AI suggest new memories', desc:'AI can suggest, but always asks before saving.', on:true },
+      { key:'private', label:'Lock Private Room', desc:'Always ask for PIN before opening.', on:true },
+      { key:'vault', label:'Lock Secure Vault', desc:'Highest protection. No auto sharing.', on:true },
+      { key:'google', label:'Allow Google sync', desc:'Sync calendar and contacts only.', on:false },
+    ];
+    const toggles = toggleDef.map(t => ({
+      label: t.label, desc: t.desc,
+      onTap: () => {},
+      trackBg: t.on ? gold : 'rgba(255,255,255,0.12)',
+      knobLeft: t.on ? '23px' : '3px',
+    }));
+
+    return {
+      isToday: s==='today', isTalk: s==='talk', isRecord: s==='record', isRooms: s==='rooms',
+      isMemory: s==='memory', isFamily: s==='family', isDecision: s==='decision', isFinance: s==='finance',
+      isPrivate: s==='private', isSecurity: s==='security',
+      navTabs, hoverCard, hoverChip,
+      goRooms: () => this.go('rooms'),
+
+      statusItems: [
+        { label: 'Mood', value: 'Calm', color: '#7fc79a' },
+        { label: 'Energy', value: 'Medium', color: gold },
+        { label: 'Work pressure', value: 'High', color: '#d98a5a' },
+        { label: 'Money pressure', value: 'Medium', color: gold },
+      ],
+      priorities: [
+        { n: '1', text: 'Finish the vendor quotation', tag: 'Work' },
+        { n: '2', text: 'Call Abba about the weekend', tag: 'Family' },
+        { n: '3', text: 'Pay the electricity bill', tag: 'Money' },
+      ],
+      todayActions: [
+        { glyph: '✦', label: 'Talk to AI', onTap: () => this.go('talk') },
+        { glyph: '✎', label: 'Add Daily Record', onTap: () => this.go('record') },
+        { glyph: '⚖', label: 'Check a Decision', onTap: () => this.go('decision') },
+        { glyph: '🔒', label: 'Add Private Note', onTap: () => this.go('private') },
+        { glyph: '◷', label: "Today's Report", onTap: () => this.go('today') },
+      ],
+
+      messages: this.state.messages.map(m => ({ text: m.text, isAi: m.role==='ai', isUser: m.role==='user' })),
+      input: this.state.input,
+      onInput: (e) => this.setState({ input: e.target.value }),
+      sendMsg: this.sendMsg,
+      showSavePrompt: this.state.showSavePrompt,
+      confirmSave: () => { this.setState({ showSavePrompt: false }); this.toast('talkToast', 'Saved to your memory.'); },
+      dismissSave: () => { this.setState({ showSavePrompt: false }); this.toast('talkToast', 'Kept private. Not saved.'); },
+      talkToast: this.state.talkToast,
+      talkChips: [
+        { label: 'Save to memory', onTap: () => this.toast('talkToast', 'Saved to your memory.') },
+        { label: 'Mark as private', onTap: () => this.toast('talkToast', 'Marked as private.') },
+        { label: 'Add as task', onTap: () => this.toast('talkToast', 'Added to your tasks.') },
+        { label: 'Add as decision', onTap: () => this.toast('talkToast', 'Sent to Decision Room.') },
+        { label: 'Add as daily record', onTap: () => this.toast('talkToast', 'Added to today\u2019s record.') },
+      ],
+
+      levelFields: [
+        mkLevel({ key:'mood', label:'Mood' }, ['Low','Okay','Good'], ['#d98a5a', gold, '#7fc79a']),
+        mkLevel({ key:'energy', label:'Energy' }, ['Tired','Medium','Fresh'], ['#d98a5a', gold, '#7fc79a']),
+        mkLevel({ key:'stress', label:'Stress' }, ['Calm','Some','High'], ['#7fc79a', gold, '#d98a5a']),
+      ],
+      recordFields: [
+        { label: 'SLEEP', placeholder: 'How many hours did you sleep?' },
+        { label: 'FOOD', placeholder: 'What did you eat today?' },
+        { label: 'WORK PROGRESS', placeholder: 'What did you finish?' },
+        { label: 'MONEY SPENT', placeholder: 'Any important spending?' },
+        { label: 'PERSONAL THOUGHT', placeholder: 'One thought about today...' },
+      ],
+      saveRecord: () => this.toast('recordToast', 'Today\u2019s record saved. Well done.'),
+      recordToast: this.state.recordToast,
+
+      rooms: [
+        { name: 'Today Center', desc: 'Your day at a glance', glyph: '◇', key: 'today' },
+        { name: 'AI Talk Room', desc: 'Talk with your Brain', glyph: '✦', key: 'talk' },
+        { name: 'Daily Record', desc: 'Remember today', glyph: '✎', key: 'record' },
+        { name: 'Private Room', desc: 'Your deepest notes', glyph: '🔒', key: 'private', locked: true },
+        { name: 'Secure Vault', desc: 'Important documents', glyph: '🛡', key: 'private', locked: true },
+        { name: 'Memory Library', desc: 'What I remember', glyph: '◈', key: 'memory' },
+        { name: 'Family Hub', desc: 'People I love', glyph: '♡', key: 'family' },
+        { name: 'People Hub', desc: 'Important contacts', glyph: '◔', key: 'family' },
+        { name: 'Finance Center', desc: 'Money & budget', glyph: '₿', key: 'finance' },
+        { name: 'Work Center', desc: 'Tasks & vendors', glyph: '▤', key: 'today' },
+        { name: 'Decision Room', desc: 'Think before acting', glyph: '⚖', key: 'decision' },
+        { name: 'Photos & Docs', desc: 'Files & memories', glyph: '▣', key: 'today' },
+        { name: 'Google Center', desc: 'Connected services', glyph: '◉', key: 'today' },
+        { name: 'Risk Warnings', desc: 'Gentle life alerts', glyph: '△', key: 'today' },
+        { name: 'Life Reports', desc: 'Weekly & monthly', glyph: '◷', key: 'today' },
+        { name: 'Security Center', desc: 'Privacy & access', glyph: '⛉', key: 'security' },
+      ].map(r => ({ ...r, locked: !!r.locked, onTap: () => this.go(r.key) })),
+
+      memories: [
+        { type: 'Identity', typeColor: gold, date: 'Jun 12', title: 'I value honesty over comfort in hard talks.', privacy: 'Private', confidence: 'High' },
+        { type: 'Health pattern', typeColor: '#7fc79a', date: 'Jun 09', title: 'My energy drops when I sleep under 6 hours.', privacy: 'Private', confidence: 'High' },
+        { type: 'Family', typeColor: '#d98a5a', date: 'Jun 02', title: 'Abba prefers a call on Friday evenings.', privacy: 'Family', confidence: 'Medium' },
+        { type: 'Money pattern', typeColor: gold, date: 'May 28', title: 'I overspend on food delivery when stressed.', privacy: 'Private', confidence: 'High' },
+        { type: 'Life lesson', typeColor: '#6c5ce7', date: 'May 20', title: 'Saying no early saves me weeks of regret.', privacy: 'Private', confidence: 'Medium' },
+      ],
+      memToast: this.state.memToast,
+      memAccept: () => this.toast('memToast', 'New memory saved.'),
+      memDismiss: () => this.toast('memToast', 'Okay, not saved.'),
+
+      family: [
+        { initial: 'A', name: 'Abba', relation: 'Father', note: 'Call on Fridays', next: 'Birthday in 9 days', avatarBg: gold },
+        { initial: 'M', name: 'Amma', relation: 'Mother', note: 'Loves jasmine flowers', next: 'Visit this weekend', avatarBg: '#d98a5a' },
+        { initial: 'N', name: 'Nadia', relation: 'Wife', note: 'Anniversary in July', next: 'Plan dinner', avatarBg: '#6c5ce7' },
+        { initial: 'R', name: 'Rayan', relation: 'Son', note: 'Exam next week', next: 'Help with study', avatarBg: '#7fc79a' },
+      ],
+
+      decisionImpacts: [
+        { label: 'Money impact', value: 'High', color: '#d98a5a' },
+        { label: 'Work impact', value: 'Helpful', color: '#7fc79a' },
+        { label: 'Family impact', value: 'Low', color: '#8a8a98' },
+        { label: 'Energy needed', value: 'Medium', color: gold },
+      ],
+
+      financeStats: [
+        { label: 'Income', value: '৳ 1,20,000', color: '#7fc79a' },
+        { label: 'Savings', value: '৳ 3,40,000', color: '#f4f2ec' },
+        { label: 'Loan / Debt', value: '৳ 45,000', color: '#d98a5a' },
+        { label: 'Due this week', value: '৳ 6,200', color: gold },
+      ],
+
+      privateLocked: this.state.privateLocked,
+      privateOpen: !this.state.privateLocked,
+      pinDots, keypad,
+      lockPrivate: () => this.setState({ privateLocked: true }),
+      privateEntries: [
+        { date: 'June 25, late night', text: 'I felt proud of myself today. I stayed calm during the argument instead of reacting.' },
+        { date: 'June 21', text: 'I keep worrying about money even when things are fine. I want to understand this fear better.' },
+        { date: 'June 14', text: 'A quiet thought I am not ready to share with anyone yet.' },
+      ],
+      privateActions: [
+        { glyph: '✎', label: 'Add Private Entry' },
+        { glyph: '🎙', label: 'Voice Reflection' },
+        { glyph: '◳', label: 'Private Photo' },
+        { glyph: '✦', label: 'Allow AI Review' },
+      ],
+
+      toggles,
+      securityActions: [
+        { glyph: '⇪', label: 'Export my data', color: '#f4f2ec', border: 'rgba(255,255,255,0.08)' },
+        { glyph: '◷', label: 'Memory approval rules', color: '#f4f2ec', border: 'rgba(255,255,255,0.08)' },
+        { glyph: '◉', label: 'Google connection permission', color: '#f4f2ec', border: 'rgba(255,255,255,0.08)' },
+        { glyph: '🗑', label: 'Delete all my data', color: '#d98a5a', border: 'rgba(196,116,72,0.3)' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; }
+  .rb-scroll::-webkit-scrollbar { display: none; width: 0; height: 0; }
+  .rb-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+</style>
+</helmet>
+
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+    <rect width="400" height="400" fill="#0c0c12"/>
+    <rect x="120" y="120" width="160" height="160" rx="40" fill="#1d1830" stroke="#c9a24b" stroke-width="3"/>
+    <text x="200" y="232" font-family="Georgia, serif" font-size="92" fill="#c9a24b" text-anchor="middle" font-style="italic">R</text>
+  </svg>
+</template>
+
+<div style="min-height: 100vh; width: 100%; background: radial-gradient(120% 90% at 50% -10%, #1a1726 0%, #0a0a0f 55%); display: flex; align-items: center; justify-content: center; padding: 28px 16px; font-family: 'Hind Siliguri', sans-serif;">
+
+  <div style="width: 390px; max-width: 100%; height: 800px; background: #0c0c12; border-radius: 42px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 50px 120px -30px rgba(0,0,0,0.9), 0 0 0 11px #050507, 0 0 0 12px rgba(201,162,75,0.18); overflow: hidden; position: relative; display: flex; flex-direction: column;">
+
+    <!-- status bar -->
+    <div style="height: 46px; flex: 0 0 46px; display: flex; align-items: center; justify-content: space-between; padding: 0 26px; color: #f4f2ec; font-size: 13px; font-weight: 600; letter-spacing: .02em; z-index: 5;">
+      <span>৯:৪১</span>
+      <div style="display: flex; align-items: center; gap: 6px; opacity: .9;">
+        <span style="font-size: 11px; letter-spacing: .14em; color: #c9a24b;">ব্যক্তিগত</span>
+        <span style="width: 5px; height: 5px; border-radius: 50%; background: #c9a24b; display: inline-block;"></span>
+      </div>
+    </div>
+
+    <!-- scrollable content -->
+    <div class="rb-scroll" style="flex: 1 1 auto; overflow-y: auto; overflow-x: hidden; padding: 0 18px 120px;">
+
+      <!-- ============ TODAY ============ -->
+      <sc-if value="{{ isToday }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 18px;">
+          <div style="font-size: 12px; letter-spacing: .08em; color: #7a7a88;">শুক্রবার · ২৭ জুন</div>
+          <div style="font-family: 'Tiro Bangla', serif; font-size: 36px; line-height: 1.15; color: #f4f2ec; margin-top: 6px;">শুভ <span style="font-style: italic; color: #c9a24b;">সকাল</span></div>
+        </div>
+
+        <!-- AI summary card -->
+        <div style="background: linear-gradient(160deg, #1d1830 0%, #14131c 100%); border: 1px solid rgba(201,162,75,0.22); border-radius: 22px; padding: 18px; margin-bottom: 14px;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+            <span style="width: 26px; height: 26px; border-radius: 8px; background: #c9a24b; color: #14131c; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px;">R</span>
+            <span style="font-size: 12px; letter-spacing: .06em; color: #b69a55;">রয়্যাল ব্রেইন · আজ</span>
+          </div>
+          <div style="font-size: 16px; line-height: 1.6; color: #e9e6dc;">আজ তোমার শক্তি মাঝারি মনে হচ্ছে। কাজের চাপ বেশি। অপ্রয়োজনীয় মেসেজ দেখার আগে সবচেয়ে জরুরি কাজটা আগে শুরু করো।</div>
+        </div>
+
+        <!-- status grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+          <sc-for list="{{ statusItems }}" as="s" hint-placeholder-count="4">
+            <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 14px;">
+              <div style="font-size: 13px; color: #7a7a88; margin-bottom: 8px;">{{ s.label }}</div>
+              <div style="display: flex; align-items: center; gap: 7px;">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: {{ s.color }};"></span>
+                <span style="font-size: 16px; font-weight: 600; color: #f4f2ec;">{{ s.value }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- priorities -->
+        <div style="font-size: 12px; letter-spacing: .06em; color: #7a7a88; margin: 4px 4px 10px;">আজকের ৩টি প্রধান কাজ</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+          <sc-for list="{{ priorities }}" as="p" hint-placeholder-count="3">
+            <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; gap: 12px;">
+              <span style="width: 24px; height: 24px; flex: 0 0 24px; border-radius: 8px; background: rgba(201,162,75,0.14); color: #c9a24b; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700;">{{ p.n }}</span>
+              <span style="flex: 1; font-size: 15px; color: #e9e6dc;">{{ p.text }}</span>
+              <span style="font-size: 11px; color: #7a7a88;">{{ p.tag }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- risk warning -->
+        <div style="background: rgba(196,116,72,0.10); border: 1px solid rgba(196,116,72,0.30); border-radius: 18px; padding: 14px 16px; margin-bottom: 18px; display: flex; gap: 12px; align-items: flex-start;">
+          <span style="width: 22px; height: 22px; flex: 0 0 22px; border-radius: 50%; border: 1.5px solid #c47448; color: #d98a5a; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 1px;">!</span>
+          <div>
+            <div style="font-size: 14px; font-weight: 600; color: #e3a878;">ঘুম স্বাভাবিকের চেয়ে কম</div>
+            <div style="font-size: 13px; color: #b89b86; line-height: 1.5; margin-top: 2px;">তুমি ৫ ঘণ্টা ২০ মিনিট ঘুমিয়েছ। আজ রাতে একটু আগে বিশ্রাম নাও, কাল হালকা লাগবে।</div>
+          </div>
+        </div>
+
+        <!-- quick actions -->
+        <div style="font-size: 12px; letter-spacing: .06em; color: #7a7a88; margin: 4px 4px 10px;">দ্রুত কাজ</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <sc-for list="{{ todayActions }}" as="a" hint-placeholder-count="5">
+            <div onClick="{{ a.onTap }}" style="background: #14131c; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px 14px; cursor: pointer; display: flex; flex-direction: column; gap: 10px;" style-hover="{{ hoverCard }}">
+              <span style="font-size: 18px;">{{ a.glyph }}</span>
+              <span style="font-size: 14px; font-weight: 500; color: #e9e6dc;">{{ a.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ AI TALK ============ -->
+      <sc-if value="{{ isTalk }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 16px;">
+          <div style="font-size: 12px; letter-spacing: .06em; color: #7a7a88;">ব্যক্তিগত AI</div>
+          <div style="font-family: 'Tiro Bangla', serif; font-size: 32px; color: #f4f2ec; margin-top: 4px;">AI আলাপ ঘর</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px;">
+          <sc-for list="{{ messages }}" as="m" hint-placeholder-count="3">
+            <sc-if value="{{ m.isAi }}" hint-placeholder-val="{{ true }}">
+              <div style="align-self: flex-start; max-width: 86%; background: #14131c; border: 1px solid rgba(201,162,75,0.18); border-radius: 18px 18px 18px 6px; padding: 13px 15px;">
+                <div style="font-size: 11px; letter-spacing: .04em; color: #b69a55; margin-bottom: 6px;">রয়্যাল ব্রেইন</div>
+                <div style="font-size: 15px; line-height: 1.6; color: #e9e6dc;">{{ m.text }}</div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ m.isUser }}" hint-placeholder-val="{{ true }}">
+              <div style="align-self: flex-end; max-width: 86%; background: #2a2440; border: 1px solid rgba(255,255,255,0.08); border-radius: 18px 18px 6px 18px; padding: 13px 15px; font-size: 15px; line-height: 1.6; color: #f4f2ec;">{{ m.text }}</div>
+            </sc-if>
+          </sc-for>
+        </div>
+
+        <!-- save-to-memory privacy prompt -->
+        <sc-if value="{{ showSavePrompt }}" hint-placeholder-val="{{ false }}">
+          <div style="background: rgba(108,92,231,0.10); border: 1px solid rgba(108,92,231,0.35); border-radius: 18px; padding: 15px; margin-bottom: 14px;">
+            <div style="font-size: 14px; color: #cfc6f5; line-height: 1.55; margin-bottom: 12px;">এই কথাগুলো ব্যক্তিগত মনে হচ্ছে। এটা কি দীর্ঘমেয়াদি স্মৃতিতে রাখতে চাও?</div>
+            <div style="display: flex; gap: 8px;">
+              <span onClick="{{ confirmSave }}" style="flex: 1; text-align: center; background: #6c5ce7; color: #fff; border-radius: 12px; padding: 11px; font-size: 14px; font-weight: 600; cursor: pointer;">স্মৃতিতে রাখো</span>
+              <span onClick="{{ dismissSave }}" style="flex: 1; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.14); color: #b9b4c9; border-radius: 12px; padding: 11px; font-size: 14px; cursor: pointer;">ব্যক্তিগত রাখো</span>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- action chips -->
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
+          <sc-for list="{{ talkChips }}" as="c" hint-placeholder-count="5">
+            <span onClick="{{ c.onTap }}" style="background: #131319; border: 1px solid rgba(255,255,255,0.09); color: #c8c4d0; border-radius: 999px; padding: 9px 14px; font-size: 13px; cursor: pointer;" style-hover="{{ hoverChip }}">{{ c.label }}</span>
+          </sc-for>
+        </div>
+        <sc-if value="{{ talkToast }}" hint-placeholder-val="{{ false }}">
+          <div style="text-align: center; font-size: 13px; color: #c9a24b; margin-bottom: 14px;">{{ talkToast }}</div>
+        </sc-if>
+
+        <!-- input -->
+        <div style="display: flex; align-items: center; gap: 8px; background: #14131c; border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 7px 7px 7px 16px;">
+          <input value="{{ input }}" onChange="{{ onInput }}" placeholder="তোমার ব্রেইনকে যেকোনো কিছু বলো..." style="flex: 1; min-width: 0; background: transparent; border: none; outline: none; color: #f4f2ec; font-size: 15px; font-family: 'Hind Siliguri', sans-serif;" />
+          <span style="width: 40px; height: 40px; flex: 0 0 40px; border-radius: 14px; background: #1d1b28; border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; color: #c9a24b; cursor: pointer; font-size: 16px;">🎙</span>
+          <span onClick="{{ sendMsg }}" style="width: 40px; height: 40px; flex: 0 0 40px; border-radius: 14px; background: #c9a24b; color: #14131c; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 700; font-size: 18px;">↑</span>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ DAILY RECORD ============ -->
+      <sc-if value="{{ isRecord }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 16px;">
+          <div style="font-size: 12px; letter-spacing: .08em; color: #7a7a88;">শুক্রবার · ২৭ জুন</div>
+          <div style="font-family: 'Tiro Bangla', serif; font-size: 32px; color: #f4f2ec; margin-top: 4px;">দৈনিক রেকর্ড</div>
+          <div style="font-size: 14px; color: #8a8a98; margin-top: 4px;">আজকের দিনটা মনে রাখতে কয়েক মিনিট।</div>
+        </div>
+
+        <!-- level pickers -->
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <sc-for list="{{ levelFields }}" as="f" hint-placeholder-count="3">
+            <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 15px;">
+              <div style="font-size: 14px; color: #e9e6dc; margin-bottom: 11px;">{{ f.label }}</div>
+              <div style="display: flex; gap: 8px;">
+                <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="3">
+                  <span onClick="{{ o.onTap }}" style="flex: 1; text-align: center; padding: 10px 4px; border-radius: 12px; font-size: 13px; cursor: pointer; border: 1px solid {{ o.border }}; background: {{ o.bg }}; color: {{ o.fg }};">{{ o.label }}</span>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- text fields -->
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
+          <sc-for list="{{ recordFields }}" as="r" hint-placeholder-count="4">
+            <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 15px;">
+              <div style="font-size: 12px; letter-spacing: .02em; color: #7a7a88; margin-bottom: 8px;">{{ r.label }}</div>
+              <input placeholder="{{ r.placeholder }}" style="width: 100%; background: transparent; border: none; outline: none; color: #f4f2ec; font-size: 15px; font-family: 'Hind Siliguri', sans-serif;" />
+            </div>
+          </sc-for>
+        </div>
+
+        <div onClick="{{ saveRecord }}" style="margin-top: 16px; text-align: center; background: #c9a24b; color: #14131c; border-radius: 16px; padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer;">আজকের রেকর্ড সংরক্ষণ করো</div>
+        <sc-if value="{{ recordToast }}" hint-placeholder-val="{{ false }}">
+          <div style="text-align: center; font-size: 13px; color: #c9a24b; margin-top: 12px;">{{ recordToast }}</div>
+        </sc-if>
+      </div>
+      </sc-if>
+
+      <!-- ============ ROOMS DIRECTORY ============ -->
+      <sc-if value="{{ isRooms }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 16px;">
+          <div style="font-size: 12px; letter-spacing: .06em; color: #7a7a88;">তোমার ডিজিটাল ঘর</div>
+          <div style="font-family: 'Tiro Bangla', serif; font-size: 32px; color: #f4f2ec; margin-top: 4px;">সব ঘর</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <sc-for list="{{ rooms }}" as="r" hint-placeholder-count="16">
+            <div onClick="{{ r.onTap }}" style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 15px; cursor: pointer; min-height: 112px; display: flex; flex-direction: column; justify-content: space-between;" style-hover="{{ hoverCard }}">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-size: 20px;">{{ r.glyph }}</span>
+                <sc-if value="{{ r.locked }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; color: #7a7a88;">🔒</span></sc-if>
+              </div>
+              <div>
+                <div style="font-size: 14px; font-weight: 600; color: #f4f2ec;">{{ r.name }}</div>
+                <div style="font-size: 11px; color: #7a7a88; margin-top: 3px; line-height: 1.4;">{{ r.desc }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ MEMORY LIBRARY ============ -->
+      <sc-if value="{{ isMemory }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 16px; display: flex; align-items: flex-end; justify-content: space-between;">
+          <div>
+            <div style="font-size: 12px; letter-spacing: .06em; color: #7a7a88;">যা আমি মনে রাখি</div>
+            <div style="font-family: 'Tiro Bangla', serif; font-size: 32px; color: #f4f2ec; margin-top: 4px;">স্মৃতি লাইব্রেরি</div>
+          </div>
+          <span onClick="{{ goRooms }}" style="font-size: 13px; color: #c9a24b; cursor: pointer; padding-bottom: 8px;">ঘর</span>
+        </div>
+
+        <!-- AI suggestion -->
+        <div style="background: rgba(108,92,231,0.10); border: 1px solid rgba(108,92,231,0.30); border-radius: 18px; padding: 14px; margin-bottom: 14px; display: flex; gap: 12px; align-items: flex-start;">
+          <span style="font-size: 16px;">✨</span>
+          <div style="flex: 1;">
+            <div style="font-size: 13px; color: #cfc6f5; line-height: 1.55;">আজকের রেকর্ড থেকে একটা নতুন স্মৃতি পেলাম: <b style="color:#fff;">“তুমি ভোরবেলা সবচেয়ে ভালো মনোযোগ দিতে পারো।”</b></div>
+            <div style="display: flex; gap: 8px; margin-top: 10px;">
+              <span onClick="{{ memAccept }}" style="background: #6c5ce7; color: #fff; border-radius: 10px; padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer;">স্মৃতি রাখো</span>
+              <span onClick="{{ memDismiss }}" style="border: 1px solid rgba(255,255,255,0.14); color: #b9b4c9; border-radius: 10px; padding: 8px 14px; font-size: 13px; cursor: pointer;">এখন নয়</span>
+            </div>
+          </div>
+        </div>
+        <sc-if value="{{ memToast }}" hint-placeholder-val="{{ false }}"><div style="text-align:center; font-size:13px; color:#c9a24b; margin-bottom:14px;">{{ memToast }}</div></sc-if>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <sc-for list="{{ memories }}" as="m" hint-placeholder-count="5">
+            <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 15px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px;">
+                <span style="font-size: 11px; letter-spacing: .04em; color: {{ m.typeColor }};">{{ m.type }}</span>
+                <span style="font-size: 11px; color: #7a7a88;">{{ m.date }}</span>
+              </div>
+              <div style="font-size: 15px; color: #f4f2ec; line-height: 1.5;">{{ m.title }}</div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                <span style="font-size: 11px; color: #7a7a88;">{{ m.privacy }}</span>
+                <span style="font-size: 11px; color: #7a7a88;">·</span>
+                <span style="font-size: 11px; color: #8a8a98;">আস্থা {{ m.confidence }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ FAMILY HUB ============ -->
+      <sc-if value="{{ isFamily }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 16px; display: flex; align-items: flex-end; justify-content: space-between;">
+          <div>
+            <div style="font-size: 12px; letter-spacing: .06em; color: #7a7a88;">যাদের ভালোবাসি</div>
+            <div style="font-family: 'Tiro Bangla', serif; font-size: 32px; color: #f4f2ec; margin-top: 4px;">পরিবার কেন্দ্র</div>
+          </div>
+          <span onClick="{{ goRooms }}" style="font-size: 13px; color: #c9a24b; cursor: pointer; padding-bottom: 8px;">ঘর</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <sc-for list="{{ family }}" as="f" hint-placeholder-count="4">
+            <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 14px; display: flex; align-items: center; gap: 14px; cursor: pointer;" style-hover="{{ hoverCard }}">
+              <span style="width: 52px; height: 52px; flex: 0 0 52px; border-radius: 16px; background: {{ f.avatarBg }}; color: #14131c; display: flex; align-items: center; justify-content: center; font-family: 'Tiro Bangla', serif; font-size: 22px;">{{ f.initial }}</span>
+              <div style="flex: 1;">
+                <div style="font-size: 16px; font-weight: 600; color: #f4f2ec;">{{ f.name }}</div>
+                <div style="font-size: 12px; color: #8a8a98; margin-top: 2px;">{{ f.relation }} · {{ f.note }}</div>
+              </div>
+              <span style="font-size: 11px; color: #c9a24b; text-align: right; line-height: 1.5;">{{ f.next }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ DECISION ROOM ============ -->
+      <sc-if value="{{ isDecision }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 16px; display: flex; align-items: flex-end; justify-content: space-between;">
+          <div>
+            <div style="font-size: 12px; letter-spacing: .06em; color: #7a7a88;">কাজের আগে ভাবো</div>
+            <div style="font-family: 'Tiro Bangla', serif; font-size: 32px; color: #f4f2ec; margin-top: 4px;">সিদ্ধান্ত ঘর</div>
+          </div>
+          <span onClick="{{ goRooms }}" style="font-size: 13px; color: #c9a24b; cursor: pointer; padding-bottom: 8px;">ঘর</span>
+        </div>
+
+        <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; padding: 18px; margin-bottom: 14px;">
+          <div style="font-size: 12px; color: #7a7a88; margin-bottom: 6px;">বর্তমান সিদ্ধান্ত</div>
+          <div style="font-size: 19px; color: #f4f2ec; line-height: 1.4;">এই মাসে কি কাজের জন্য নতুন ল্যাপটপ কিনব?</div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px;">
+            <sc-for list="{{ decisionImpacts }}" as="d" hint-placeholder-count="4">
+              <div style="background: #0e0e15; border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 12px;">
+                <div style="font-size: 11px; color: #7a7a88;">{{ d.label }}</div>
+                <div style="font-size: 14px; font-weight: 600; color: {{ d.color }}; margin-top: 4px;">{{ d.value }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display: flex; gap: 10px; margin-top: 14px;">
+            <div style="flex: 1; background: rgba(196,116,72,0.10); border: 1px solid rgba(196,116,72,0.28); border-radius: 14px; padding: 12px; text-align: center;">
+              <div style="font-size: 11px; color: #d98a5a;">ঝুঁকি স্কোর</div>
+              <div style="font-size: 24px; font-family: 'Tiro Bangla', serif; color: #e3a878;">৪ / ১০</div>
+            </div>
+            <div style="flex: 1; background: rgba(94,164,120,0.10); border: 1px solid rgba(94,164,120,0.28); border-radius: 14px; padding: 12px; text-align: center;">
+              <div style="font-size: 11px; color: #7fc79a;">উপকার স্কোর</div>
+              <div style="font-size: 24px; font-family: 'Tiro Bangla', serif; color: #8fd6aa;">৭ / ১০</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: linear-gradient(160deg, #1d1830 0%, #14131c 100%); border: 1px solid rgba(201,162,75,0.22); border-radius: 18px; padding: 16px; margin-bottom: 14px;">
+          <div style="font-size: 12px; letter-spacing: .04em; color: #b69a55; margin-bottom: 8px;">AI পরামর্শ</div>
+          <div style="font-size: 15px; line-height: 1.6; color: #e9e6dc;">উপকার সত্যিই আছে, তবে এই মাসে টাকার চাপ বেশি। ভালো একটা মাঝামাঝি পথ: একটা স্পষ্ট বাজেট ঠিক করো, তারপর দুই সপ্তাহ অপেক্ষা করো। চূড়ান্ত সিদ্ধান্ত তুমিই নেবে।</div>
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+          <span style="flex: 1; text-align: center; background: #c9a24b; color: #14131c; border-radius: 14px; padding: 13px; font-size: 14px; font-weight: 700; cursor: pointer;">পরে সিদ্ধান্ত নাও</span>
+          <span style="flex: 1; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.14); color: #c8c4d0; border-radius: 14px; padding: 13px; font-size: 14px; cursor: pointer;">সিদ্ধান্ত লেখো</span>
+        </div>
+        <div style="text-align: center; font-size: 12px; color: #7a7a88; margin-top: 12px;">AI পরামর্শ দিতে পারে। চূড়ান্ত সিদ্ধান্ত সবসময় তুমিই নেবে।</div>
+      </div>
+      </sc-if>
+
+      <!-- ============ FINANCE ============ -->
+      <sc-if value="{{ isFinance }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 16px; display: flex; align-items: flex-end; justify-content: space-between;">
+          <div>
+            <div style="font-size: 12px; letter-spacing: .06em; color: #7a7a88;">এই মাস</div>
+            <div style="font-family: 'Tiro Bangla', serif; font-size: 32px; color: #f4f2ec; margin-top: 4px;">অর্থ কেন্দ্র</div>
+          </div>
+          <span onClick="{{ goRooms }}" style="font-size: 13px; color: #c9a24b; cursor: pointer; padding-bottom: 8px;">ঘর</span>
+        </div>
+
+        <div style="background: linear-gradient(160deg, #1d1830 0%, #14131c 100%); border: 1px solid rgba(201,162,75,0.20); border-radius: 22px; padding: 20px; margin-bottom: 14px;">
+          <div style="font-size: 13px; color: #b69a55;">এই মাসে বাকি টাকা</div>
+          <div style="font-family: 'Tiro Bangla', serif; font-size: 42px; color: #f4f2ec; margin: 6px 0 14px;">৳ ২৮,৪০০</div>
+          <div style="height: 8px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden;">
+            <div style="height: 100%; width: 64%; background: #c9a24b; border-radius: 999px;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: #8a8a98;">
+            <span>খরচ ৳ ৫১,৬০০</span>
+            <span>বাজেট ৳ ৮০,০০০</span>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+          <sc-for list="{{ financeStats }}" as="f" hint-placeholder-count="4">
+            <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 15px;">
+              <div style="font-size: 12px; color: #7a7a88;">{{ f.label }}</div>
+              <div style="font-size: 20px; font-weight: 600; color: {{ f.color }}; margin-top: 6px;">{{ f.value }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="background: linear-gradient(160deg, #1d1830 0%, #14131c 100%); border: 1px solid rgba(201,162,75,0.22); border-radius: 18px; padding: 16px;">
+          <div style="font-size: 12px; letter-spacing: .04em; color: #b69a55; margin-bottom: 8px;">AI টাকার পরামর্শ</div>
+          <div style="font-size: 15px; line-height: 1.6; color: #e9e6dc;">এই মাসে তোমার বেশিরভাগ খরচ হয়েছে খাবার ডেলিভারিতে। সপ্তাহে দুদিন বাসায় রান্না করলে প্রায় ৳ ৬,০০০ বাঁচতে পারে।</div>
+          <div style="font-size: 12px; color: #7a7a88; margin-top: 10px;">AI কখনো তোমার টাকা সরায় না। শুধু বুঝতে সাহায্য করে।</div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ PRIVATE ROOM ============ -->
+      <sc-if value="{{ isPrivate }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 16px; display: flex; align-items: flex-end; justify-content: space-between;">
+          <div>
+            <div style="font-size: 12px; letter-spacing: .06em; color: #7a7a88;">শুধু তোমার জন্য</div>
+            <div style="font-family: 'Tiro Bangla', serif; font-size: 32px; color: #f4f2ec; margin-top: 4px;">ব্যক্তিগত ঘর</div>
+          </div>
+          <span onClick="{{ goRooms }}" style="font-size: 13px; color: #c9a24b; cursor: pointer; padding-bottom: 8px;">ঘর</span>
+        </div>
+
+        <sc-if value="{{ privateLocked }}" hint-placeholder-val="{{ true }}">
+          <div style="background: #131319; border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 32px 22px; text-align: center; margin-top: 10px;">
+            <div style="width: 64px; height: 64px; margin: 0 auto 18px; border-radius: 22px; background: rgba(201,162,75,0.12); display: flex; align-items: center; justify-content: center; font-size: 28px;">🔒</div>
+            <div style="font-size: 18px; color: #f4f2ec; font-weight: 600;">এই ঘর তালাবদ্ধ</div>
+            <div style="font-size: 14px; color: #8a8a98; margin-top: 8px; line-height: 1.6; max-width: 270px; margin-left: auto; margin-right: auto;">এই ঘরে তোমার সবচেয়ে গভীর, ব্যক্তিগত নোট থাকে। খুলতে পিন দাও।</div>
+            <div style="display: flex; gap: 10px; justify-content: center; margin: 22px 0;">
+              <sc-for list="{{ pinDots }}" as="d" hint-placeholder-count="4">
+                <span style="width: 14px; height: 14px; border-radius: 50%; background: {{ d.bg }}; border: 1px solid rgba(255,255,255,0.2);"></span>
+              </sc-for>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 240px; margin: 0 auto;">
+              <sc-for list="{{ keypad }}" as="k" hint-placeholder-count="12">
+                <span onClick="{{ k.onTap }}" style="aspect-ratio: 1.6; display: flex; align-items: center; justify-content: center; background: #1a1922; border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; font-size: 20px; color: #f4f2ec; cursor: pointer;">{{ k.label }}</span>
+              </sc-for>
+            </div>
+            <div style="font-size: 12px; color: #7a7a88; margin-top: 18px;">টিপ: ডেমোতে যেকোনো ৪ সংখ্যা দিলেই খুলবে।</div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ privateOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="background: rgba(108,92,231,0.10); border: 1px solid rgba(108,92,231,0.30); border-radius: 18px; padding: 14px; margin-bottom: 14px;">
+            <div style="font-size: 13px; color: #cfc6f5; line-height: 1.55;">এই ঘরে খুব ব্যক্তিগত তথ্য আছে। তোমার অনুমতির পরেই AI বিশ্লেষণ শুরু হবে।</div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px;">
+            <sc-for list="{{ privateEntries }}" as="e" hint-placeholder-count="3">
+              <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 15px;">
+                <div style="font-size: 12px; color: #7a7a88; margin-bottom: 6px;">{{ e.date }}</div>
+                <div style="font-size: 15px; color: #e9e6dc; line-height: 1.6;">{{ e.text }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <sc-for list="{{ privateActions }}" as="a" hint-placeholder-count="4">
+              <div style="background: #14131c; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 14px; font-size: 14px; color: #e9e6dc; cursor: pointer; display: flex; align-items: center; gap: 10px;" style-hover="{{ hoverCard }}"><span>{{ a.glyph }}</span><span>{{ a.label }}</span></div>
+            </sc-for>
+          </div>
+          <div onClick="{{ lockPrivate }}" style="margin-top: 14px; text-align: center; border: 1px solid rgba(255,255,255,0.14); color: #c8c4d0; border-radius: 14px; padding: 13px; font-size: 14px; cursor: pointer;">ঘর তালা দাও</div>
+        </sc-if>
+      </div>
+      </sc-if>
+
+      <!-- ============ SECURITY ============ -->
+      <sc-if value="{{ isSecurity }}" hint-placeholder-val="{{ true }}">
+      <div style="">
+        <div style="padding: 6px 4px 16px;">
+          <div style="font-size: 12px; letter-spacing: .06em; color: #7a7a88;">তুমিই নিয়ন্ত্রণে</div>
+          <div style="font-family: 'Tiro Bangla', serif; font-size: 30px; color: #f4f2ec; margin-top: 4px;">নিরাপত্তা ও অনুমতি</div>
+        </div>
+
+        <div style="background: rgba(94,164,120,0.10); border: 1px solid rgba(94,164,120,0.26); border-radius: 18px; padding: 14px 16px; margin-bottom: 14px; display: flex; gap: 12px; align-items: center;">
+          <span style="font-size: 18px;">🛡</span>
+          <div style="font-size: 14px; color: #9bd8b3; line-height: 1.5;">তোমার তথ্য তোমার ব্যক্তিগত জায়গায় থাকে। কিছুই শেয়ার হয় না।</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+          <sc-for list="{{ toggles }}" as="t" hint-placeholder-count="5">
+            <div style="background: #131319; border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between;">
+              <div style="flex: 1; padding-right: 12px;">
+                <div style="font-size: 15px; color: #f4f2ec;">{{ t.label }}</div>
+                <div style="font-size: 12px; color: #7a7a88; margin-top: 2px; line-height: 1.5;">{{ t.desc }}</div>
+              </div>
+              <span onClick="{{ t.onTap }}" style="width: 48px; height: 28px; flex: 0 0 48px; border-radius: 999px; background: {{ t.trackBg }}; position: relative; cursor: pointer; transition: background .2s;">
+                <span style="position: absolute; top: 3px; left: {{ t.knobLeft }}; width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: left .2s;"></span>
+              </span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <sc-for list="{{ securityActions }}" as="a" hint-placeholder-count="4">
+            <div style="background: #14131c; border: 1px solid {{ a.border }}; border-radius: 16px; padding: 15px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer;" style-hover="{{ hoverCard }}">
+              <span style="font-size: 16px;">{{ a.glyph }}</span>
+              <span style="flex: 1; font-size: 15px; color: {{ a.color }};">{{ a.label }}</span>
+              <span style="color: #7a7a88;">›</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+    </div>
+
+    <!-- ============ BOTTOM NAV ============ -->
+    <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 84px; background: linear-gradient(to top, #0c0c12 60%, rgba(12,12,18,0)); display: flex; align-items: flex-start; justify-content: space-around; padding: 12px 12px 0; z-index: 10;">
+      <sc-for list="{{ navTabs }}" as="n" hint-placeholder-count="5">
+        <div onClick="{{ n.onTap }}" style="display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; flex: 1; padding-top: 6px;">
+          <span style="font-size: 20px; filter: {{ n.filter }}; opacity: {{ n.opacity }};">{{ n.glyph }}</span>
+          <span style="font-size: 10px; letter-spacing: .01em; color: {{ n.color }};">{{ n.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 430, &quot;height&quot;: 860}}">
+class Component extends DCLogic {
+  state = {
+    screen: 'today',
+    input: '',
+    messages: [
+      { role: 'ai', text: 'শুভ সকাল। গত রাতে তোমার ঘুম একটু কম হয়েছে। দিন শুরুর আগে কেমন লাগছে বলো তো?' },
+      { role: 'user', text: 'একটু ক্লান্ত, তবে ঠিক আছি। পরে একটা বড় ভেন্ডর মিটিং আছে।' },
+      { role: 'ai', text: 'বুঝলাম। আমার মনে আছে, এই মিটিংগুলো তোমার শক্তি কমিয়ে দেয়। সকালটা হালকা রাখো, আর মনোযোগ যখন বেশি তখন কঠিন কাজটা আগে করো।' },
+    ],
+    showSavePrompt: false,
+    talkToast: '',
+    recordToast: '',
+    memToast: '',
+    pinLen: 0,
+    privateLocked: true,
+    levels: {},
+  };
+
+  go = (s) => this.setState({ screen: s, talkToast: '', recordToast: '' });
+
+  setLevel = (field, idx) => this.setState(st => ({ levels: { ...st.levels, [field]: idx } }));
+
+  sendMsg = () => {
+    const t = (this.state.input || '').trim();
+    if (!t) return;
+    this.setState(st => ({
+      input: '',
+      showSavePrompt: true,
+      messages: [...st.messages,
+        { role: 'user', text: t },
+        { role: 'ai', text: 'শেয়ার করার জন্য ধন্যবাদ। তুমি কেমন অনুভব করছ তা আমি টুকে রাখলাম। এটা কি তোমার দীর্ঘমেয়াদি স্মৃতিতে রাখব?' },
+      ],
+    }));
+  };
+
+  toast = (key, msg) => {
+    this.setState({ [key]: msg });
+    setTimeout(() => this.setState(st => (st[key] === msg ? { [key]: '' } : {})), 2200);
+  };
+
+  pressKey = (label) => {
+    if (label === '⌫') { this.setState(st => ({ pinLen: Math.max(0, st.pinLen - 1) })); return; }
+    if (label === '') return;
+    this.setState(st => {
+      const next = Math.min(4, st.pinLen + 1);
+      if (next === 4) { setTimeout(() => this.setState({ privateLocked: false, pinLen: 0 }), 180); }
+      return { pinLen: next };
+    });
+  };
+
+  renderVals() {
+    const s = this.state.screen;
+    const gold = '#c9a24b', muted = '#7a7a88';
+    const hoverCard = { borderColor: 'rgba(201,162,75,0.35)', background: '#181722' };
+    const hoverChip = { borderColor: 'rgba(201,162,75,0.4)', color: '#f4f2ec' };
+
+    const navDef = [
+      { key: 'today', label: 'আজ', glyph: '◇' },
+      { key: 'talk', label: 'আলাপ', glyph: '✦' },
+      { key: 'record', label: 'রেকর্ড', glyph: '✎' },
+      { key: 'rooms', label: 'ঘর', glyph: '▦' },
+      { key: 'security', label: 'নিরাপদ', glyph: '⛉' },
+    ];
+    const roomScreens = ['memory','family','decision','finance','private','vault','people','work','photos','google','risk','reports'];
+    const navTabs = navDef.map(n => {
+      const active = n.key === s || (n.key === 'rooms' && roomScreens.includes(s));
+      return { ...n, onTap: () => this.go(n.key),
+        color: active ? gold : muted,
+        opacity: active ? '1' : '0.55',
+        filter: active ? 'none' : 'grayscale(1)' };
+    });
+
+    const mkLevel = (field, opts, colors) => ({
+      label: field.label,
+      options: opts.map((o, i) => {
+        const sel = this.state.levels[field.key] === i;
+        return { label: o, onTap: () => this.setLevel(field.key, i),
+          bg: sel ? colors[i] + '22' : '#0e0e15',
+          border: sel ? colors[i] : 'rgba(255,255,255,0.06)',
+          fg: sel ? '#f4f2ec' : '#8a8a98' };
+      }),
+    });
+
+    const pinDots = [0,1,2,3].map(i => ({ bg: i < this.state.pinLen ? gold : 'transparent' }));
+    const keypad = ['১','২','৩','৪','৫','৬','৭','৮','৯','','০','⌫'].map(label => ({
+      label, onTap: () => this.pressKey(label),
+    }));
+
+    const toggleDef = [
+      { key:'bio', label:'ফেস / ফিঙ্গারপ্রিন্ট দিয়ে খোলো', desc:'ব্যক্তিগত ঘর খুলতে বায়োমেট্রিক ব্যবহার করো।', on:true },
+      { key:'ai', label:'AI–কে নতুন স্মৃতি প্রস্তাব করতে দাও', desc:'AI প্রস্তাব দিতে পারে, তবে সংরক্ষণের আগে সবসময় জিজ্ঞেস করে।', on:true },
+      { key:'private', label:'ব্যক্তিগত ঘর তালা দাও', desc:'খোলার আগে সবসময় পিন চাও।', on:true },
+      { key:'vault', label:'নিরাপদ ভল্ট তালা দাও', desc:'সর্বোচ্চ সুরক্ষা। স্বয়ংক্রিয় শেয়ার নেই।', on:true },
+      { key:'google', label:'গুগল সিঙ্ক অনুমতি দাও', desc:'শুধু ক্যালেন্ডার ও যোগাযোগ সিঙ্ক করো।', on:false },
+    ];
+    const toggles = toggleDef.map(t => ({
+      label: t.label, desc: t.desc,
+      onTap: () => {},
+      trackBg: t.on ? gold : 'rgba(255,255,255,0.12)',
+      knobLeft: t.on ? '23px' : '3px',
+    }));
+
+    return {
+      isToday: s==='today', isTalk: s==='talk', isRecord: s==='record', isRooms: s==='rooms',
+      isMemory: s==='memory', isFamily: s==='family', isDecision: s==='decision', isFinance: s==='finance',
+      isPrivate: s==='private', isSecurity: s==='security',
+      navTabs, hoverCard, hoverChip,
+      goRooms: () => this.go('rooms'),
+
+      statusItems: [
+        { label: 'মন', value: 'শান্ত', color: '#7fc79a' },
+        { label: 'শক্তি', value: 'মাঝারি', color: gold },
+        { label: 'কাজের চাপ', value: 'বেশি', color: '#d98a5a' },
+        { label: 'টাকার চাপ', value: 'মাঝারি', color: gold },
+      ],
+      priorities: [
+        { n: '১', text: 'ভেন্ডরের কোটেশন শেষ করো', tag: 'কাজ' },
+        { n: '২', text: 'ছুটির দিন নিয়ে আব্বাকে ফোন করো', tag: 'পরিবার' },
+        { n: '৩', text: 'বিদ্যুৎ বিল পরিশোধ করো', tag: 'টাকা' },
+      ],
+      todayActions: [
+        { glyph: '✦', label: 'AI–এর সাথে কথা বলো', onTap: () => this.go('talk') },
+        { glyph: '✎', label: 'দৈনিক রেকর্ড যোগ করো', onTap: () => this.go('record') },
+        { glyph: '⚖', label: 'সিদ্ধান্ত যাচাই করো', onTap: () => this.go('decision') },
+        { glyph: '🔒', label: 'ব্যক্তিগত নোট যোগ করো', onTap: () => this.go('private') },
+        { glyph: '◷', label: 'আজকের রিপোর্ট', onTap: () => this.go('today') },
+      ],
+
+      messages: this.state.messages.map(m => ({ text: m.text, isAi: m.role==='ai', isUser: m.role==='user' })),
+      input: this.state.input,
+      onInput: (e) => this.setState({ input: e.target.value }),
+      sendMsg: this.sendMsg,
+      showSavePrompt: this.state.showSavePrompt,
+      confirmSave: () => { this.setState({ showSavePrompt: false }); this.toast('talkToast', 'স্মৃতিতে রাখা হয়েছে।'); },
+      dismissSave: () => { this.setState({ showSavePrompt: false }); this.toast('talkToast', 'ব্যক্তিগত রাখা হলো। সংরক্ষণ করা হয়নি।'); },
+      talkToast: this.state.talkToast,
+      talkChips: [
+        { label: 'স্মৃতিতে রাখো', onTap: () => this.toast('talkToast', 'স্মৃতিতে রাখা হয়েছে।') },
+        { label: 'ব্যক্তিগত হিসেবে রাখো', onTap: () => this.toast('talkToast', 'ব্যক্তিগত হিসেবে চিহ্নিত করা হলো।') },
+        { label: 'কাজ হিসেবে যোগ করো', onTap: () => this.toast('talkToast', 'কাজে যোগ করা হয়েছে।') },
+        { label: 'সিদ্ধান্ত হিসেবে যোগ করো', onTap: () => this.toast('talkToast', 'সিদ্ধান্ত ঘরে পাঠানো হয়েছে।') },
+        { label: 'দৈনিক রেকর্ডে যোগ করো', onTap: () => this.toast('talkToast', 'আজকের রেকর্ডে যোগ করা হয়েছে।') },
+      ],
+
+      levelFields: [
+        mkLevel({ key:'mood', label:'মন' }, ['কম','ঠিক আছে','ভালো'], ['#d98a5a', gold, '#7fc79a']),
+        mkLevel({ key:'energy', label:'শক্তি' }, ['ক্লান্ত','মাঝারি','সতেজ'], ['#d98a5a', gold, '#7fc79a']),
+        mkLevel({ key:'stress', label:'চাপ' }, ['শান্ত','কিছুটা','বেশি'], ['#7fc79a', gold, '#d98a5a']),
+      ],
+      recordFields: [
+        { label: 'ঘুম', placeholder: 'কত ঘণ্টা ঘুমিয়েছ?' },
+        { label: 'খাবার', placeholder: 'আজ কী খেয়েছ?' },
+        { label: 'কাজের অগ্রগতি', placeholder: 'কী কী শেষ করেছ?' },
+        { label: 'খরচ', placeholder: 'গুরুত্বপূর্ণ কোনো খরচ?' },
+        { label: 'ব্যক্তিগত ভাবনা', placeholder: 'আজকের একটা ভাবনা...' },
+      ],
+      saveRecord: () => this.toast('recordToast', 'আজকের রেকর্ড সংরক্ষিত হয়েছে। দারুণ।'),
+      recordToast: this.state.recordToast,
+
+      rooms: [
+        { name: 'আজকের কেন্দ্র', desc: 'এক নজরে তোমার দিন', glyph: '◇', key: 'today' },
+        { name: 'AI আলাপ ঘর', desc: 'তোমার ব্রেইনের সাথে কথা', glyph: '✦', key: 'talk' },
+        { name: 'দৈনিক রেকর্ড', desc: 'আজকের দিন মনে রাখো', glyph: '✎', key: 'record' },
+        { name: 'ব্যক্তিগত ঘর', desc: 'তোমার গভীর নোট', glyph: '🔒', key: 'private', locked: true },
+        { name: 'নিরাপদ ভল্ট', desc: 'গুরুত্বপূর্ণ কাগজপত্র', glyph: '🛡', key: 'private', locked: true },
+        { name: 'স্মৃতি লাইব্রেরি', desc: 'যা আমি মনে রাখি', glyph: '◈', key: 'memory' },
+        { name: 'পরিবার কেন্দ্র', desc: 'যাদের ভালোবাসি', glyph: '♡', key: 'family' },
+        { name: 'মানুষ কেন্দ্র', desc: 'গুরুত্বপূর্ণ যোগাযোগ', glyph: '◔', key: 'family' },
+        { name: 'অর্থ কেন্দ্র', desc: 'টাকা ও বাজেট', glyph: '₿', key: 'finance' },
+        { name: 'কাজ কেন্দ্র', desc: 'কাজ ও ভেন্ডর', glyph: '▤', key: 'today' },
+        { name: 'সিদ্ধান্ত ঘর', desc: 'কাজের আগে ভাবো', glyph: '⚖', key: 'decision' },
+        { name: 'ছবি ও নথি', desc: 'ফাইল ও স্মৃতি', glyph: '▣', key: 'today' },
+        { name: 'গুগল কেন্দ্র', desc: 'যুক্ত সেবাসমূহ', glyph: '◉', key: 'today' },
+        { name: 'ঝুঁকি সতর্কতা', desc: 'নরম জীবন সতর্কতা', glyph: '△', key: 'today' },
+        { name: 'জীবন রিপোর্ট', desc: 'সাপ্তাহিক ও মাসিক', glyph: '◷', key: 'today' },
+        { name: 'নিরাপত্তা কেন্দ্র', desc: 'গোপনীয়তা ও প্রবেশ', glyph: '⛉', key: 'security' },
+      ].map(r => ({ ...r, locked: !!r.locked, onTap: () => this.go(r.key) })),
+
+      memories: [
+        { type: 'পরিচয়', typeColor: gold, date: '১২ জুন', title: 'কঠিন কথায় আরামের চেয়ে সততাকে বেশি দাম দিই।', privacy: 'ব্যক্তিগত', confidence: 'বেশি' },
+        { type: 'স্বাস্থ্যের ধরন', typeColor: '#7fc79a', date: '০৯ জুন', title: '৬ ঘণ্টার কম ঘুমালে আমার শক্তি কমে যায়।', privacy: 'ব্যক্তিগত', confidence: 'বেশি' },
+        { type: 'পরিবার', typeColor: '#d98a5a', date: '০২ জুন', title: 'আব্বা শুক্রবার সন্ধ্যায় ফোন পছন্দ করেন।', privacy: 'পরিবার', confidence: 'মাঝারি' },
+        { type: 'টাকার ধরন', typeColor: gold, date: '২৮ মে', title: 'চাপে থাকলে খাবার ডেলিভারিতে বেশি খরচ করি।', privacy: 'ব্যক্তিগত', confidence: 'বেশি' },
+        { type: 'জীবনের শিক্ষা', typeColor: '#6c5ce7', date: '২০ মে', title: 'আগেভাগে “না” বললে কয়েক সপ্তাহের আফসোস বাঁচে।', privacy: 'ব্যক্তিগত', confidence: 'মাঝারি' },
+      ],
+      memToast: this.state.memToast,
+      memAccept: () => this.toast('memToast', 'নতুন স্মৃতি রাখা হয়েছে।'),
+      memDismiss: () => this.toast('memToast', 'ঠিক আছে, রাখা হয়নি।'),
+
+      family: [
+        { initial: 'আ', name: 'আব্বা', relation: 'বাবা', note: 'শুক্রবারে ফোন করো', next: 'জন্মদিন ৯ দিন পরে', avatarBg: gold },
+        { initial: 'ম', name: 'আম্মা', relation: 'মা', note: 'জুঁই ফুল ভালোবাসেন', next: 'এই সপ্তাহে দেখা করো', avatarBg: '#d98a5a' },
+        { initial: 'না', name: 'নাদিয়া', relation: 'স্ত্রী', note: 'জুলাইয়ে বিবাহবার্ষিকী', next: 'ডিনার পরিকল্পনা করো', avatarBg: '#6c5ce7' },
+        { initial: 'রা', name: 'রায়ান', relation: 'ছেলে', note: 'সামনের সপ্তাহে পরীক্ষা', next: 'পড়াশোনায় সাহায্য করো', avatarBg: '#7fc79a' },
+      ],
+
+      decisionImpacts: [
+        { label: 'টাকার প্রভাব', value: 'বেশি', color: '#d98a5a' },
+        { label: 'কাজের প্রভাব', value: 'সহায়ক', color: '#7fc79a' },
+        { label: 'পরিবারের প্রভাব', value: 'কম', color: '#8a8a98' },
+        { label: 'প্রয়োজনীয় শক্তি', value: 'মাঝারি', color: gold },
+      ],
+
+      financeStats: [
+        { label: 'আয়', value: '৳ ১,২০,০০০', color: '#7fc79a' },
+        { label: 'সঞ্চয়', value: '৳ ৩,৪০,০০০', color: '#f4f2ec' },
+        { label: 'ঋণ / দেনা', value: '৳ ৪৫,০০০', color: '#d98a5a' },
+        { label: 'এই সপ্তাহে দেয়', value: '৳ ৬,২০০', color: gold },
+      ],
+
+      privateLocked: this.state.privateLocked,
+      privateOpen: !this.state.privateLocked,
+      pinDots, keypad,
+      lockPrivate: () => this.setState({ privateLocked: true }),
+      privateEntries: [
+        { date: '২৫ জুন, গভীর রাত', text: 'আজ নিজেকে নিয়ে গর্ব হলো। তর্কের সময় প্রতিক্রিয়া না করে শান্ত ছিলাম।' },
+        { date: '২১ জুন', text: 'সব ঠিক থাকলেও টাকা নিয়ে দুশ্চিন্তা হয়। এই ভয়টা আরও ভালো করে বুঝতে চাই।' },
+        { date: '১৪ জুন', text: 'একটা নীরব ভাবনা, যা এখনো কারো সাথে শেয়ার করতে প্রস্তুত নই।' },
+      ],
+      privateActions: [
+        { glyph: '✎', label: 'ব্যক্তিগত নোট যোগ করো' },
+        { glyph: '🎙', label: 'কণ্ঠ ভাবনা' },
+        { glyph: '◳', label: 'ব্যক্তিগত ছবি' },
+        { glyph: '✦', label: 'AI পর্যালোচনা অনুমতি দাও' },
+      ],
+
+      toggles,
+      securityActions: [
+        { glyph: '⇪', label: 'আমার তথ্য রপ্তানি করো', color: '#f4f2ec', border: 'rgba(255,255,255,0.08)' },
+        { glyph: '◷', label: 'স্মৃতি অনুমোদন নিয়ম', color: '#f4f2ec', border: 'rgba(255,255,255,0.08)' },
+        { glyph: '◉', label: 'গুগল সংযোগ অনুমতি', color: '#f4f2ec', border: 'rgba(255,255,255,0.08)' },
+        { glyph: '🗑', label: 'আমার সব তথ্য মুছে ফেলো', color: '#d98a5a', border: 'rgba(196,116,72,0.3)' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>
