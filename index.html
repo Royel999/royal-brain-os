@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Royal Brain OS</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#c9a24b">
+<meta name="theme-color" content="#07070f">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,360 +13,458 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+:root {
+  --bg:       #07070f;
+  --bg1:      #0d0d1a;
+  --bg2:      #131325;
+  --bg3:      #1a1a30;
+  --gold:     #c9a24b;
+  --gold2:    #e8c060;
+  --gold-dim: rgba(201,162,75,0.12);
+  --gold-glow:rgba(201,162,75,0.22);
+  --purple:   #7461f5;
+  --purple-dim:rgba(116,97,245,0.14);
+  --teal:     #4ecba3;
+  --teal-dim: rgba(78,203,163,0.12);
+  --amber:    #e08060;
+  --amber-dim:rgba(224,128,96,0.12);
+  --t1:       #f0ede4;
+  --t2:       #b0adc0;
+  --t3:       #5a586a;
+  --border:   rgba(255,255,255,0.07);
+  --radius:   20px;
+  --r-sm:     14px;
+  --r-xs:     10px;
+}
+
 *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+
 html, body { height: 100%; }
+
 body {
   font-family: 'Hind Siliguri', sans-serif;
-  background: radial-gradient(120% 90% at 50% -10%, #1a1726 0%, #0a0a0f 55%);
-  min-height: 100vh;
+  background: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 28px 16px;
+  min-height: 100vh;
+  overflow: hidden;
 }
 
-/* ---- PHONE FRAME ---- */
+/* Ambient background glow */
+body::before {
+  content: '';
+  position: fixed;
+  top: -30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(116,97,245,0.1) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── PHONE FRAME ── */
 .phone {
-  width: 390px;
-  max-width: 100%;
-  height: 800px;
-  background: #0c0c12;
-  border-radius: 42px;
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow:
-    0 50px 120px -30px rgba(0,0,0,0.9),
-    0 0 0 11px #050507,
-    0 0 0 12px rgba(201,162,75,0.18);
-  overflow: hidden;
   position: relative;
+  width: min(390px, 100vw);
+  height: min(844px, 100dvh);
+  background: var(--bg1);
+  border-radius: clamp(0px, 5vw, 44px);
+  border: 1px solid rgba(201,162,75,0.15);
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.8),
+    0 0 60px rgba(116,97,245,0.08),
+    0 60px 120px -20px rgba(0,0,0,0.95),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+  z-index: 1;
 }
 
-/* ---- STATUS BAR ---- */
-.status-bar {
-  height: 46px;
-  flex: 0 0 46px;
+/* ── STATUS BAR ── */
+.statusbar {
+  flex: 0 0 50px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 26px;
-  color: #f4f2ec;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: .02em;
-  z-index: 5;
-}
-.status-bar .indicator {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  opacity: .9;
-}
-.status-bar .indicator span:first-child { font-size: 11px; letter-spacing: .14em; color: #c9a24b; }
-.status-dot { width: 5px; height: 5px; border-radius: 50%; background: #c9a24b; display: inline-block; }
-
-/* ---- SCROLL AREA ---- */
-.scroll-area {
-  flex: 1 1 auto;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 0 18px 120px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.scroll-area::-webkit-scrollbar { display: none; }
-
-/* ---- SCREENS ---- */
-.screen { display: none; }
-.screen.active { display: block; }
-
-/* ---- BOTTOM NAV ---- */
-.bottom-nav {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 84px;
-  background: linear-gradient(to top, #0c0c12 60%, rgba(12,12,18,0));
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-around;
-  padding: 12px 12px 0;
+  padding: 0 24px;
   z-index: 10;
 }
-.nav-tab {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  cursor: pointer;
-  flex: 1;
-  padding-top: 6px;
-  border: none;
-  background: none;
-  font-family: 'Hind Siliguri', sans-serif;
-}
-.nav-tab .nav-glyph { font-size: 20px; transition: opacity .2s; }
-.nav-tab .nav-label { font-size: 10px; letter-spacing: .01em; color: #7a7a88; transition: color .2s; }
-.nav-tab.active .nav-glyph { opacity: 1; filter: none; }
-.nav-tab.active .nav-label { color: #c9a24b; }
-.nav-tab:not(.active) .nav-glyph { opacity: .55; filter: grayscale(1); }
-
-/* ---- SCREEN HEADER ---- */
-.screen-header { padding: 6px 4px 18px; }
-.screen-date { font-size: 12px; letter-spacing: .08em; color: #7a7a88; }
-.screen-title {
-  font-family: 'Tiro Bangla', serif;
-  font-size: 36px;
-  line-height: 1.15;
-  color: #f4f2ec;
-  margin-top: 6px;
-}
-.screen-title em { font-style: italic; color: #c9a24b; }
-.screen-subtitle { font-size: 14px; color: #8a8a98; margin-top: 4px; }
-.section-label { font-size: 12px; letter-spacing: .06em; color: #7a7a88; margin: 4px 4px 10px; }
-
-/* ---- CARDS ---- */
-.card {
-  background: #131319;
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 18px;
-  padding: 15px;
-  transition: border-color .2s, background .2s;
-}
-.card:hover { border-color: rgba(201,162,75,0.35); background: #181722; }
-.card-dark {
-  background: #14131c;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 16px;
-  padding: 16px 14px;
-  transition: border-color .2s, background .2s;
-}
-.card-dark:hover { border-color: rgba(201,162,75,0.35); background: #181722; }
-.card-royal {
-  background: linear-gradient(160deg, #1d1830 0%, #14131c 100%);
-  border: 1px solid rgba(201,162,75,0.22);
-  border-radius: 22px;
-  padding: 18px;
-}
-.card-warning {
-  background: rgba(196,116,72,0.10);
-  border: 1px solid rgba(196,116,72,0.30);
-  border-radius: 18px;
-  padding: 14px 16px;
-}
-.card-purple {
-  background: rgba(108,92,231,0.10);
-  border: 1px solid rgba(108,92,231,0.30);
-  border-radius: 18px;
-  padding: 14px;
-}
-.card-green {
-  background: rgba(94,164,120,0.10);
-  border: 1px solid rgba(94,164,120,0.26);
-  border-radius: 18px;
-  padding: 14px 16px;
-}
-
-/* ---- GRID ---- */
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-/* ---- AI SUMMARY CARD ---- */
-.ai-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-.ai-badge {
-  width: 26px; height: 26px;
-  border-radius: 8px;
-  background: #c9a24b;
-  color: #14131c;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 13px;
-}
-.ai-label { font-size: 12px; letter-spacing: .06em; color: #b69a55; }
-.ai-text { font-size: 16px; line-height: 1.6; color: #e9e6dc; }
-
-/* ---- STATUS ITEMS ---- */
-.status-item { padding: 14px; }
-.status-item .si-label { font-size: 13px; color: #7a7a88; margin-bottom: 8px; }
-.status-item .si-val { display: flex; align-items: center; gap: 7px; }
-.si-dot { width: 8px; height: 8px; border-radius: 50%; }
-.si-text { font-size: 16px; font-weight: 600; color: #f4f2ec; }
-
-/* ---- PRIORITY ITEM ---- */
-.priority-item {
-  background: #131319;
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 16px;
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 8px;
-}
-.priority-num {
-  width: 24px; height: 24px;
-  flex: 0 0 24px;
-  border-radius: 8px;
-  background: rgba(201,162,75,0.14);
-  color: #c9a24b;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 700;
-}
-.priority-text { flex: 1; font-size: 15px; color: #e9e6dc; }
-.priority-tag { font-size: 11px; color: #7a7a88; }
-
-/* ---- WARNING BLOCK ---- */
-.warn-icon {
-  width: 22px; height: 22px;
-  flex: 0 0 22px;
-  border-radius: 50%;
-  border: 1.5px solid #c47448;
-  color: #d98a5a;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 700;
-  margin-top: 1px;
-}
-.warn-title { font-size: 14px; font-weight: 600; color: #e3a878; }
-.warn-desc { font-size: 13px; color: #b89b86; line-height: 1.5; margin-top: 2px; }
-
-/* ---- QUICK ACTION CARDS ---- */
-.action-card {
-  background: #14131c;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 16px;
-  padding: 16px 14px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  transition: border-color .2s, background .2s;
-}
-.action-card:hover { border-color: rgba(201,162,75,0.35); background: #181722; }
-.action-glyph { font-size: 18px; }
-.action-label { font-size: 14px; font-weight: 500; color: #e9e6dc; }
-
-/* ---- CHAT MESSAGES ---- */
-.messages-area { display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px; }
-.msg-ai {
-  align-self: flex-start;
-  max-width: 86%;
-  background: #14131c;
-  border: 1px solid rgba(201,162,75,0.18);
-  border-radius: 18px 18px 18px 6px;
-  padding: 13px 15px;
-}
-.msg-ai-label { font-size: 11px; letter-spacing: .04em; color: #b69a55; margin-bottom: 6px; }
-.msg-ai-text { font-size: 15px; line-height: 1.6; color: #e9e6dc; }
-.msg-user {
-  align-self: flex-end;
-  max-width: 86%;
-  background: #2a2440;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 18px 18px 6px 18px;
-  padding: 13px 15px;
+.statusbar-time {
   font-size: 15px;
-  line-height: 1.6;
-  color: #f4f2ec;
+  font-weight: 700;
+  color: var(--t1);
+  letter-spacing: 0.02em;
 }
-
-/* ---- CHAT INPUT ---- */
-.chat-input-wrap {
+.statusbar-right {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #14131c;
+}
+.statusbar-pill {
+  background: var(--gold-dim);
+  border: 1px solid var(--gold-glow);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+}
+.statusbar-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 6px var(--gold);
+}
+
+/* ── SCROLL AREA ── */
+.scroll {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 16px 100px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  position: relative;
+}
+.scroll::-webkit-scrollbar { display: none; }
+
+/* ── SCREENS ── */
+.screen {
+  display: none;
+  animation: screenIn 0.25s ease-out;
+}
+.screen.active { display: block; }
+@keyframes screenIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SECTION HEADERS ── */
+.page-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--t3);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.page-title {
+  font-family: 'Tiro Bangla', serif;
+  font-size: 34px;
+  line-height: 1.1;
+  color: var(--t1);
+}
+.page-title em { font-style: italic; color: var(--gold); }
+.page-subtitle {
+  font-size: 13px;
+  color: var(--t3);
+  margin-top: 5px;
+  line-height: 1.5;
+}
+.page-head { padding: 10px 2px 20px; }
+.page-head-row {
+  padding: 10px 2px 20px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.back-btn {
+  font-size: 13px;
+  color: var(--gold);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: 'Hind Siliguri', sans-serif;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--gold-dim);
+  border: 1px solid var(--gold-glow);
+  transition: background 0.2s;
+}
+.back-btn:hover { background: rgba(201,162,75,0.2); }
+
+.section-label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--t3);
+  text-transform: uppercase;
+  margin: 6px 2px 12px;
+}
+
+/* ── GLASS CARDS ── */
+.card {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  transition: border-color 0.25s, background 0.25s, transform 0.2s;
+}
+.card:hover { border-color: rgba(255,255,255,0.12); }
+.card.clickable { cursor: pointer; }
+.card.clickable:hover {
+  border-color: var(--gold-glow);
+  background: rgba(201,162,75,0.05);
+  transform: translateY(-1px);
+}
+.card.clickable:active { transform: translateY(0) scale(0.99); }
+
+.card-gold {
+  background: linear-gradient(145deg, rgba(30,25,55,0.9) 0%, rgba(15,13,28,0.95) 100%);
+  border: 1px solid var(--gold-glow);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: 0 4px 30px rgba(201,162,75,0.08), inset 0 1px 0 rgba(201,162,75,0.1);
+}
+.card-purple {
+  background: rgba(116,97,245,0.08);
+  border: 1px solid rgba(116,97,245,0.25);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.card-amber {
+  background: var(--amber-dim);
+  border: 1px solid rgba(224,128,96,0.3);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+.card-teal {
+  background: var(--teal-dim);
+  border: 1px solid rgba(78,203,163,0.28);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+
+/* ── 2-COL GRID ── */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ── SPACING HELPERS ── */
+.mb8  { margin-bottom: 8px; }
+.mb12 { margin-bottom: 12px; }
+.mb14 { margin-bottom: 14px; }
+.mb16 { margin-bottom: 16px; }
+.mb20 { margin-bottom: 20px; }
+
+/* ── AI SUMMARY CARD ── */
+.ai-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.ai-badge {
+  width: 30px; height: 30px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--gold), #a07830);
+  color: #0d0d1a;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 14px;
+  box-shadow: 0 0 12px rgba(201,162,75,0.4);
+}
+.ai-brand-name { font-size: 11px; letter-spacing: 0.08em; color: #b09050; }
+.ai-text { font-size: 15px; line-height: 1.65; color: #d8d5cc; }
+
+/* ── STATUS GRID ── */
+.status-chip {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.chip-label { font-size: 12px; color: var(--t3); }
+.chip-val { display: flex; align-items: center; gap: 8px; }
+.chip-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex: 0 0 8px;
+}
+.chip-text { font-size: 15px; font-weight: 600; color: var(--t1); }
+
+/* ── PRIORITIES ── */
+.priority-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 15px;
+  margin-bottom: 8px;
+  border-radius: var(--r-sm);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+}
+.priority-row:last-child { margin-bottom: 0; }
+.pnum {
+  width: 26px; height: 26px;
+  flex: 0 0 26px;
+  border-radius: 8px;
+  background: var(--gold-dim);
+  border: 1px solid var(--gold-glow);
+  color: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700;
+}
+.ptext { flex: 1; font-size: 14px; color: #dedad0; line-height: 1.4; }
+.ptag {
+  font-size: 10px;
+  color: var(--t3);
+  background: rgba(255,255,255,0.05);
+  border-radius: 999px;
+  padding: 3px 8px;
+}
+
+/* ── RISK ── */
+.risk-icon {
+  width: 24px; height: 24px;
+  flex: 0 0 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--amber);
+  color: var(--amber);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+}
+.risk-title { font-size: 14px; font-weight: 600; color: #e8a878; }
+.risk-desc { font-size: 13px; color: #b08870; line-height: 1.5; margin-top: 3px; }
+
+/* ── QUICK ACTIONS ── */
+.action-tile {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.2s;
+}
+.action-tile:hover {
+  border-color: var(--gold-glow);
+  background: rgba(201,162,75,0.06);
+  transform: translateY(-2px);
+}
+.action-tile:active { transform: scale(0.97); }
+.action-glyph { font-size: 22px; }
+.action-label { font-size: 13px; font-weight: 500; color: var(--t2); line-height: 1.3; }
+
+/* ── CHAT ── */
+.messages { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+.msg-ai {
+  align-self: flex-start;
+  max-width: 88%;
+  background: rgba(116,97,245,0.1);
+  border: 1px solid rgba(116,97,245,0.2);
+  border-radius: 18px 18px 18px 5px;
+  padding: 12px 15px;
+}
+.msg-ai-label { font-size: 10px; letter-spacing: 0.06em; color: #9080e8; margin-bottom: 6px; text-transform: uppercase; }
+.msg-ai-text { font-size: 14px; line-height: 1.65; color: #d8d5cc; }
+.msg-user {
+  align-self: flex-end;
+  max-width: 88%;
+  background: linear-gradient(135deg, #2e2650, #1e1a35);
+  border: 1px solid rgba(116,97,245,0.25);
+  border-radius: 18px 18px 5px 18px;
+  padding: 12px 15px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--t1);
+}
+
+.save-prompt { display: none; margin-bottom: 14px; }
+.save-prompt.show { display: block; }
+.save-prompt-text { font-size: 14px; color: #c0b8f0; line-height: 1.55; margin-bottom: 12px; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+.chip {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  color: var(--t2);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: 'Hind Siliguri', sans-serif;
+  transition: all 0.2s;
+}
+.chip:hover { border-color: var(--gold-glow); color: var(--gold); background: var(--gold-dim); }
+
+.chat-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 18px;
-  padding: 7px 7px 7px 16px;
+  border-radius: var(--radius);
+  padding: 8px 8px 8px 16px;
 }
 .chat-input {
   flex: 1; min-width: 0;
   background: transparent;
   border: none; outline: none;
-  color: #f4f2ec;
-  font-size: 15px;
+  color: var(--t1);
+  font-size: 14px;
   font-family: 'Hind Siliguri', sans-serif;
 }
-.chat-input::placeholder { color: #555566; }
-.btn-mic {
-  width: 40px; height: 40px;
-  border-radius: 14px;
-  background: #1d1b28;
-  border: 1px solid rgba(255,255,255,0.08);
+.chat-input::placeholder { color: var(--t3); }
+.btn-mic, .btn-send {
+  width: 38px; height: 38px;
+  border-radius: 12px;
+  flex: 0 0 38px;
   display: flex; align-items: center; justify-content: center;
-  color: #c9a24b; cursor: pointer; font-size: 16px;
-}
-.btn-send {
-  width: 40px; height: 40px;
-  border-radius: 14px;
-  background: #c9a24b;
-  color: #14131c;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-weight: 700; font-size: 18px;
-  border: none; font-family: inherit;
-}
-
-/* ---- ACTION CHIPS ---- */
-.chips-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-.chip {
-  background: #131319;
-  border: 1px solid rgba(255,255,255,0.09);
-  color: #c8c4d0;
-  border-radius: 999px;
-  padding: 9px 14px;
-  font-size: 13px;
   cursor: pointer;
-  font-family: 'Hind Siliguri', sans-serif;
-  transition: border-color .2s, color .2s;
+  border: none;
+  font-size: 16px;
+  transition: transform 0.15s, opacity 0.15s;
 }
-.chip:hover { border-color: rgba(201,162,75,0.4); color: #f4f2ec; }
+.btn-mic:active, .btn-send:active { transform: scale(0.92); }
+.btn-mic { background: rgba(255,255,255,0.07); color: var(--gold); }
+.btn-send { background: var(--gold); color: var(--bg1); font-weight: 800; box-shadow: 0 0 16px rgba(201,162,75,0.3); }
 
-/* ---- TOAST ---- */
-.toast { text-align: center; font-size: 13px; color: #c9a24b; margin: 8px 0; display: none; }
-.toast.show { display: block; }
-
-/* ---- LEVEL PICKERS ---- */
-.level-card { margin-bottom: 12px; }
-.level-label { font-size: 14px; color: #e9e6dc; margin-bottom: 11px; }
-.level-options { display: flex; gap: 8px; }
+/* ── LEVEL PICKERS ── */
+.level-label { font-size: 14px; color: var(--t2); margin-bottom: 12px; font-weight: 500; }
+.level-opts { display: flex; gap: 8px; }
 .level-opt {
   flex: 1;
   text-align: center;
-  padding: 10px 4px;
-  border-radius: 12px;
-  font-size: 13px;
+  padding: 10px 6px;
+  border-radius: var(--r-xs);
+  font-size: 12px;
   cursor: pointer;
   border: 1px solid rgba(255,255,255,0.06);
-  background: #0e0e15;
-  color: #8a8a98;
+  background: rgba(255,255,255,0.03);
+  color: var(--t3);
   font-family: 'Hind Siliguri', sans-serif;
-  transition: all .2s;
+  transition: all 0.2s;
 }
-.level-opt.sel-low { border-color: #d98a5a; background: rgba(217,138,90,0.13); color: #f4f2ec; }
-.level-opt.sel-mid { border-color: #c9a24b; background: rgba(201,162,75,0.13); color: #f4f2ec; }
-.level-opt.sel-high { border-color: #7fc79a; background: rgba(127,199,154,0.13); color: #f4f2ec; }
+.level-opt.sel-low  { border-color: var(--amber); background: var(--amber-dim); color: var(--t1); }
+.level-opt.sel-mid  { border-color: var(--gold);  background: var(--gold-dim);  color: var(--t1); }
+.level-opt.sel-high { border-color: var(--teal);  background: var(--teal-dim);  color: var(--t1); }
 
-/* ---- TEXT INPUTS ---- */
-.text-field { margin-bottom: 12px; }
-.field-label { font-size: 12px; letter-spacing: .02em; color: #7a7a88; margin-bottom: 8px; }
+/* ── TEXT FIELDS ── */
+.field-label { font-size: 11px; letter-spacing: 0.05em; color: var(--t3); margin-bottom: 7px; text-transform: uppercase; }
 .field-input {
   width: 100%;
   background: transparent;
   border: none; outline: none;
-  color: #f4f2ec;
-  font-size: 15px;
+  color: var(--t1);
+  font-size: 14px;
   font-family: 'Hind Siliguri', sans-serif;
 }
-.field-input::placeholder { color: #444455; }
+.field-input::placeholder { color: var(--t3); }
 
-/* ---- BTN PRIMARY ---- */
-.btn-primary {
-  display: block;
-  width: 100%;
+/* ── BUTTONS ── */
+.btn-gold {
+  display: block; width: 100%;
   text-align: center;
-  background: #c9a24b;
-  color: #14131c;
-  border-radius: 16px;
+  background: linear-gradient(135deg, var(--gold), #a07830);
+  color: var(--bg1);
+  border-radius: var(--r-sm);
   padding: 15px;
   font-size: 15px;
   font-weight: 700;
@@ -374,264 +472,414 @@ body {
   border: none;
   font-family: 'Hind Siliguri', sans-serif;
   margin-top: 16px;
+  box-shadow: 0 4px 20px rgba(201,162,75,0.25);
+  transition: opacity 0.2s, transform 0.15s;
 }
-.btn-outline {
-  display: block;
-  width: 100%;
+.btn-gold:hover { opacity: 0.92; transform: translateY(-1px); }
+.btn-gold:active { transform: scale(0.98); }
+.btn-ghost {
+  display: block; width: 100%;
   text-align: center;
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.14);
-  color: #c8c4d0;
-  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--t2);
+  border-radius: var(--r-sm);
   padding: 13px;
   font-size: 14px;
   cursor: pointer;
   font-family: 'Hind Siliguri', sans-serif;
   margin-top: 8px;
+  transition: border-color 0.2s, color 0.2s;
 }
-
-/* ---- ROOMS GRID ---- */
-.room-card {
-  background: #131319;
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 18px;
-  padding: 15px;
-  cursor: pointer;
-  min-height: 112px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: border-color .2s, background .2s;
-}
-.room-card:hover { border-color: rgba(201,162,75,0.35); background: #181722; }
-.room-top { display: flex; align-items: center; justify-content: space-between; }
-.room-glyph { font-size: 20px; }
-.room-lock { font-size: 13px; color: #7a7a88; }
-.room-name { font-size: 14px; font-weight: 600; color: #f4f2ec; }
-.room-desc { font-size: 11px; color: #7a7a88; margin-top: 3px; line-height: 1.4; }
-
-/* ---- MEMORY ---- */
-.mem-type { font-size: 11px; letter-spacing: .04em; }
-.mem-date { font-size: 11px; color: #7a7a88; }
-.mem-title { font-size: 15px; color: #f4f2ec; line-height: 1.5; margin: 7px 0; }
-.mem-meta { font-size: 11px; color: #7a7a88; }
-
-/* ---- FAMILY ---- */
-.family-card {
-  background: #131319;
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 18px;
-  padding: 14px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  cursor: pointer;
-  margin-bottom: 10px;
-  transition: border-color .2s, background .2s;
-}
-.family-card:hover { border-color: rgba(201,162,75,0.35); background: #181722; }
-.avatar {
-  width: 52px; height: 52px;
-  flex: 0 0 52px;
-  border-radius: 16px;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Tiro Bangla', serif;
-  font-size: 22px;
-  color: #14131c;
-}
-.family-name { font-size: 16px; font-weight: 600; color: #f4f2ec; }
-.family-rel { font-size: 12px; color: #8a8a98; margin-top: 2px; }
-.family-next { font-size: 11px; color: #c9a24b; text-align: right; line-height: 1.5; }
-
-/* ---- DECISION ---- */
-.decision-title { font-size: 19px; color: #f4f2ec; line-height: 1.4; margin: 6px 0 16px; }
-.impact-item {
-  background: #0e0e15;
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 14px;
-  padding: 12px;
-}
-.impact-label { font-size: 11px; color: #7a7a88; }
-.impact-val { font-size: 14px; font-weight: 600; margin-top: 4px; }
-.score-box { flex: 1; border-radius: 14px; padding: 12px; text-align: center; }
-.score-label { font-size: 11px; }
-.score-num { font-size: 24px; font-family: 'Tiro Bangla', serif; }
-.ai-advice-label { font-size: 12px; letter-spacing: .04em; color: #b69a55; margin-bottom: 8px; }
-
-/* ---- FINANCE ---- */
-.balance-label { font-size: 13px; color: #b69a55; }
-.balance-amount { font-family: 'Tiro Bangla', serif; font-size: 42px; color: #f4f2ec; margin: 6px 0 14px; }
-.progress-track { height: 8px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; }
-.progress-fill { height: 100%; border-radius: 999px; }
-.progress-labels { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: #8a8a98; }
-.finance-stat { }
-.stat-label { font-size: 12px; color: #7a7a88; }
-.stat-val { font-size: 20px; font-weight: 600; margin-top: 6px; }
-
-/* ---- PRIVATE ROOM ---- */
-.lock-box {
-  background: #131319;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 24px;
-  padding: 32px 22px;
-  text-align: center;
-  margin-top: 10px;
-}
-.lock-icon {
-  width: 64px; height: 64px;
-  margin: 0 auto 18px;
-  border-radius: 22px;
-  background: rgba(201,162,75,0.12);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 28px;
-}
-.lock-title { font-size: 18px; color: #f4f2ec; font-weight: 600; }
-.lock-desc { font-size: 14px; color: #8a8a98; margin-top: 8px; line-height: 1.6; max-width: 270px; margin-left: auto; margin-right: auto; }
-.pin-dots { display: flex; gap: 10px; justify-content: center; margin: 22px 0; }
-.pin-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: transparent; transition: background .15s; }
-.pin-dot.filled { background: #c9a24b; }
-.keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 240px; margin: 0 auto; }
-.key-btn {
-  aspect-ratio: 1.6;
-  display: flex; align-items: center; justify-content: center;
-  background: #1a1922;
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 14px;
-  font-size: 20px;
-  color: #f4f2ec;
-  cursor: pointer;
-  font-family: 'Hind Siliguri', sans-serif;
-  transition: background .15s;
-}
-.key-btn:hover { background: #222130; }
-.key-btn:active { background: #2a2840; }
-.lock-hint { font-size: 12px; color: #7a7a88; margin-top: 18px; }
-
-.private-content { display: none; }
-.private-content.open { display: block; }
-.private-entry { margin-bottom: 10px; }
-.private-date { font-size: 12px; color: #7a7a88; margin-bottom: 6px; }
-.private-text { font-size: 15px; color: #e9e6dc; line-height: 1.6; }
-
-/* ---- SECURITY ---- */
-.toggle-row {
-  background: #131319;
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 16px;
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-.toggle-info { flex: 1; padding-right: 12px; }
-.toggle-label { font-size: 15px; color: #f4f2ec; }
-.toggle-desc { font-size: 12px; color: #7a7a88; margin-top: 2px; line-height: 1.5; }
-.toggle-track {
-  width: 48px; height: 28px;
-  flex: 0 0 48px;
-  border-radius: 999px;
-  position: relative;
-  cursor: pointer;
-  transition: background .2s;
-}
-.toggle-knob {
-  position: absolute;
-  top: 3px;
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  background: #fff;
-  transition: left .2s;
-}
-.sec-action {
-  background: #14131c;
-  border-radius: 16px;
-  padding: 15px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  margin-bottom: 10px;
-  transition: border-color .2s, background .2s;
-}
-.sec-action:hover { background: #181722; }
-.sec-action .sa-arrow { color: #7a7a88; margin-left: auto; }
-
-/* ---- HEADER WITH BACK ---- */
-.screen-header-row {
-  padding: 6px 4px 16px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-}
-.screen-header-row .back-btn {
-  font-size: 13px;
-  color: #c9a24b;
-  cursor: pointer;
-  padding-bottom: 8px;
-  background: none;
-  border: none;
-  font-family: 'Hind Siliguri', sans-serif;
-}
-
-/* ---- SAVE PROMPT ---- */
-.save-prompt { display: none; margin-bottom: 14px; }
-.save-prompt.show { display: block; }
-.save-prompt-text { font-size: 14px; color: #cfc6f5; line-height: 1.55; margin-bottom: 12px; }
-.save-btns { display: flex; gap: 8px; }
+.btn-ghost:hover { border-color: rgba(255,255,255,0.22); color: var(--t1); }
 .btn-purple {
   flex: 1;
   text-align: center;
-  background: #6c5ce7;
+  background: var(--purple);
   color: #fff;
-  border-radius: 12px;
+  border-radius: var(--r-xs);
   padding: 11px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   border: none;
   font-family: 'Hind Siliguri', sans-serif;
+  box-shadow: 0 4px 16px rgba(116,97,245,0.3);
 }
-.btn-ghost {
+.btn-ghost-sm {
   flex: 1;
   text-align: center;
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.14);
-  color: #b9b4c9;
-  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--t2);
+  border-radius: var(--r-xs);
   padding: 11px;
   font-size: 14px;
   cursor: pointer;
   font-family: 'Hind Siliguri', sans-serif;
 }
 
-/* ---- AI SUGGESTION ---- */
-.ai-suggest { display: flex; gap: 12px; align-items: flex-start; }
-.ai-suggest-text { font-size: 13px; color: #cfc6f5; line-height: 1.55; }
-.ai-suggest-btns { display: flex; gap: 8px; margin-top: 10px; }
-.btn-small-purple {
-  background: #6c5ce7; color: #fff;
-  border-radius: 10px; padding: 8px 14px;
-  font-size: 13px; font-weight: 600;
+/* ── ROOMS ── */
+.room-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 15px;
+  cursor: pointer;
+  min-height: 110px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.2s;
+}
+.room-card:hover {
+  border-color: var(--gold-glow);
+  background: rgba(201,162,75,0.04);
+  transform: translateY(-2px);
+}
+.room-card:active { transform: scale(0.97); }
+.room-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.room-glyph { font-size: 22px; }
+.room-lock { font-size: 12px; color: var(--t3); }
+.room-name { font-size: 13px; font-weight: 600; color: var(--t1); }
+.room-desc { font-size: 11px; color: var(--t3); margin-top: 3px; line-height: 1.4; }
+
+/* ── MEMORY ── */
+.mem-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.mem-type { font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; }
+.mem-date { font-size: 11px; color: var(--t3); }
+.mem-title { font-size: 14px; color: var(--t1); line-height: 1.5; margin-bottom: 10px; }
+.mem-footer { display: flex; align-items: center; gap: 8px; }
+.mem-tag {
+  font-size: 10px;
+  border-radius: 999px;
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  color: var(--t3);
+}
+
+/* ── FAMILY ── */
+.family-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: all 0.2s;
+}
+.family-row:last-child { margin-bottom: 0; }
+.family-row:hover { border-color: var(--gold-glow); background: rgba(201,162,75,0.04); }
+.avatar {
+  width: 50px; height: 50px;
+  flex: 0 0 50px;
+  border-radius: 15px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Tiro Bangla', serif;
+  font-size: 20px;
+  color: var(--bg1);
+  font-weight: 600;
+}
+.family-name { font-size: 15px; font-weight: 600; color: var(--t1); }
+.family-rel { font-size: 12px; color: var(--t3); margin-top: 2px; }
+.family-next { font-size: 11px; color: var(--gold); text-align: right; line-height: 1.5; }
+
+/* ── DECISION ── */
+.dec-question { font-size: 17px; color: var(--t1); line-height: 1.45; margin: 8px 0 18px; }
+.impact-box {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 12px;
+}
+.impact-label { font-size: 10px; color: var(--t3); text-transform: uppercase; letter-spacing: 0.05em; }
+.impact-val { font-size: 14px; font-weight: 600; margin-top: 5px; }
+.score-box {
+  flex: 1;
+  border-radius: var(--r-sm);
+  padding: 14px 12px;
+  text-align: center;
+}
+.score-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+.score-num { font-size: 26px; font-family: 'Tiro Bangla', serif; font-weight: 600; }
+.ai-advice-label { font-size: 10px; letter-spacing: 0.08em; color: #9080e0; text-transform: uppercase; margin-bottom: 10px; }
+
+/* ── FINANCE ── */
+.balance-eyebrow { font-size: 12px; color: #b09050; margin-bottom: 6px; }
+.balance-big {
+  font-family: 'Tiro Bangla', serif;
+  font-size: 40px;
+  font-weight: 600;
+  color: var(--t1);
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+.progress-bar {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.progress-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--gold), var(--gold2)); }
+.progress-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--t3); }
+.stat-label { font-size: 11px; color: var(--t3); margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.04em; }
+.stat-val { font-size: 19px; font-weight: 600; }
+
+/* ── PRIVATE / PIN ── */
+.lock-shell {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  padding: 36px 24px;
+  text-align: center;
+  margin-top: 8px;
+}
+.lock-icon-wrap {
+  width: 72px; height: 72px;
+  margin: 0 auto 20px;
+  border-radius: 24px;
+  background: var(--gold-dim);
+  border: 1px solid var(--gold-glow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+  box-shadow: 0 0 30px rgba(201,162,75,0.12);
+}
+.lock-title { font-size: 18px; font-weight: 600; color: var(--t1); }
+.lock-desc { font-size: 13px; color: var(--t3); margin-top: 8px; line-height: 1.6; max-width: 260px; margin-left: auto; margin-right: auto; }
+.pin-dots { display: flex; gap: 12px; justify-content: center; margin: 24px 0; }
+.pin-dot {
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  border: 1.5px solid var(--t3);
+  background: transparent;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+.pin-dot.filled { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 8px rgba(201,162,75,0.5); }
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-width: 250px;
+  margin: 0 auto;
+}
+.key {
+  aspect-ratio: 1.5;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  font-size: 20px;
+  color: var(--t1);
+  cursor: pointer;
+  font-family: 'Hind Siliguri', sans-serif;
+  transition: background 0.15s, transform 0.1s;
+}
+.key:hover { background: rgba(255,255,255,0.1); }
+.key:active { transform: scale(0.92); background: rgba(201,162,75,0.12); }
+.lock-hint { font-size: 11px; color: var(--t3); margin-top: 20px; }
+
+.private-content { display: none; }
+.private-content.open { display: block; }
+.priv-entry { padding: 14px; margin-bottom: 10px; }
+.priv-date { font-size: 11px; color: var(--t3); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+.priv-text { font-size: 14px; color: #d8d5cc; line-height: 1.65; }
+
+/* ── SECURITY ── */
+.toggle-row {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.toggle-info { flex: 1; padding-right: 14px; }
+.toggle-label { font-size: 14px; color: var(--t1); }
+.toggle-desc { font-size: 11px; color: var(--t3); margin-top: 3px; line-height: 1.45; }
+.toggle-track {
+  width: 46px; height: 26px;
+  flex: 0 0 46px;
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+.toggle-knob {
+  position: absolute;
+  top: 3px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  transition: left 0.25s cubic-bezier(.4,0,.2,1);
+}
+.sec-row {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.sec-row:hover { border-color: rgba(255,255,255,0.14); background: rgba(255,255,255,0.05); }
+.sec-arrow { color: var(--t3); margin-left: auto; font-size: 18px; }
+
+/* ── TOAST ── */
+.toast {
+  text-align: center;
+  font-size: 12px;
+  color: var(--gold);
+  padding: 8px;
+  display: none;
+  animation: fadeIn 0.3s;
+}
+.toast.show { display: block; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ── AI SUGGEST ── */
+.ai-sug-body { display: flex; gap: 12px; align-items: flex-start; }
+.ai-sug-text { font-size: 13px; color: #c0b8f0; line-height: 1.55; }
+.ai-sug-btns { display: flex; gap: 8px; margin-top: 10px; }
+.btn-sm-purple {
+  background: var(--purple); color: #fff;
+  border-radius: 8px; padding: 8px 14px;
+  font-size: 12px; font-weight: 600;
   cursor: pointer; border: none;
   font-family: 'Hind Siliguri', sans-serif;
+  box-shadow: 0 2px 12px rgba(116,97,245,0.3);
 }
-.btn-small-ghost {
-  border: 1px solid rgba(255,255,255,0.14);
-  color: #b9b4c9;
-  border-radius: 10px; padding: 8px 14px;
-  font-size: 13px; cursor: pointer;
+.btn-sm-ghost {
+  border: 1px solid rgba(255,255,255,0.12); color: var(--t2);
+  border-radius: 8px; padding: 8px 14px;
+  font-size: 12px; cursor: pointer;
   background: transparent;
   font-family: 'Hind Siliguri', sans-serif;
 }
 
-/* misc */
-.mb-10 { margin-bottom: 10px; }
-.mb-14 { margin-bottom: 14px; }
-.mb-16 { margin-bottom: 16px; }
-.mb-18 { margin-bottom: 18px; }
-.flex-gap { display: flex; gap: 8px; }
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 88px;
+  padding: 10px 8px 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  z-index: 20;
+}
+.nav-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--bg1) 55%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.nav-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: 'Hind Siliguri', sans-serif;
+  position: relative;
+  z-index: 1;
+  padding-top: 4px;
+  transition: transform 0.15s;
+}
+.nav-tab:active { transform: scale(0.9); }
+.nav-glyph {
+  font-size: 22px;
+  opacity: 0.4;
+  transition: opacity 0.2s, filter 0.2s;
+  filter: grayscale(1);
+}
+.nav-lbl {
+  font-size: 10px;
+  color: var(--t3);
+  transition: color 0.2s;
+}
+.nav-tab.active .nav-glyph { opacity: 1; filter: none; }
+.nav-tab.active .nav-lbl { color: var(--gold); }
+.nav-tab.active .nav-dot {
+  position: absolute;
+  bottom: -2px;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 6px var(--gold);
+}
+
+/* ── INSTALL BANNER ── */
+#installBanner {
+  display: none;
+  position: absolute;
+  bottom: 88px; left: 0; right: 0;
+  margin: 0 12px;
+  background: linear-gradient(135deg, rgba(30,25,50,0.98), rgba(15,13,28,0.98));
+  border: 1px solid var(--gold-glow);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  z-index: 30;
+  align-items: center;
+  gap: 12px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,162,75,0.08);
+}
+#installBanner.show { display: flex; }
+.install-icon {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--gold), #a07830);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; color: var(--bg1); font-size: 18px;
+  flex: 0 0 40px;
+  box-shadow: 0 0 12px rgba(201,162,75,0.3);
+}
+.install-txt-title { font-size: 13px; font-weight: 600; color: var(--t1); }
+.install-txt-sub { font-size: 11px; color: var(--t3); margin-top: 2px; }
+.btn-install {
+  background: var(--gold); color: var(--bg1);
+  border: none; border-radius: 10px;
+  padding: 9px 16px; font-size: 12px; font-weight: 700;
+  cursor: pointer; font-family: 'Hind Siliguri', sans-serif;
+  white-space: nowrap;
+  box-shadow: 0 0 14px rgba(201,162,75,0.25);
+}
+.btn-close-banner {
+  background: none; border: none; color: var(--t3);
+  font-size: 18px; cursor: pointer; padding: 2px;
+  line-height: 1;
+}
+
+/* ── FLEX HELPERS ── */
+.row { display: flex; gap: 8px; }
+.row > * { flex: 1; }
 .flex-ai { display: flex; gap: 12px; align-items: flex-start; }
+
+/* ── FULLSCREEN ON MOBILE ── */
+@media (max-width: 430px) {
+  body { padding: 0; align-items: stretch; }
+  .phone {
+    width: 100vw;
+    height: 100dvh;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+  }
+}
 </style>
 </head>
 <body>
@@ -639,118 +887,93 @@ body {
 <div class="phone">
 
   <!-- STATUS BAR -->
-  <div class="status-bar">
-    <span id="clock">৯:৪১</span>
-    <div class="indicator">
-      <span>ব্যক্তিগত</span>
-      <span class="status-dot"></span>
+  <div class="statusbar">
+    <div class="statusbar-time" id="clock">৯:৪১</div>
+    <div class="statusbar-right">
+      <div class="statusbar-pill">ব্যক্তিগত</div>
+      <div class="statusbar-dot"></div>
     </div>
   </div>
 
-  <!-- SCROLL AREA -->
-  <div class="scroll-area" id="scrollArea">
+  <!-- CONTENT AREA -->
+  <div class="scroll" id="scrollArea">
 
-    <!-- ======== TODAY SCREEN ======== -->
+    <!-- ══════════════ TODAY ══════════════ -->
     <div class="screen active" id="screen-today">
-      <div class="screen-header">
-        <div class="screen-date" id="todayDate">শুক্রবার · ২৭ জুন</div>
-        <div class="screen-title">শুভ <em>সকাল</em></div>
+      <div class="page-head">
+        <div class="page-eyebrow" id="todayDate">শুক্রবার · ২৭ জুন</div>
+        <div class="page-title">শুভ <em>সকাল</em></div>
       </div>
 
-      <!-- AI summary -->
-      <div class="card-royal mb-14">
-        <div class="ai-header">
+      <!-- AI card -->
+      <div class="card-gold mb14">
+        <div class="ai-brand">
           <div class="ai-badge">R</div>
-          <span class="ai-label">রয়্যাল ব্রেইন · আজ</span>
+          <div>
+            <div class="ai-brand-name">রয়্যাল ব্রেইন · আজ</div>
+          </div>
         </div>
         <div class="ai-text">আজ তোমার শক্তি মাঝারি মনে হচ্ছে। কাজের চাপ বেশি। অপ্রয়োজনীয় মেসেজ দেখার আগে সবচেয়ে জরুরি কাজটা আগে শুরু করো।</div>
       </div>
 
       <!-- Status grid -->
-      <div class="grid-2 mb-14">
-        <div class="card status-item">
-          <div class="si-label">মন</div>
-          <div class="si-val"><span class="si-dot" style="background:#7fc79a"></span><span class="si-text">শান্ত</span></div>
+      <div class="g2 mb14">
+        <div class="card status-chip">
+          <div class="chip-label">মন</div>
+          <div class="chip-val"><div class="chip-dot" style="background:var(--teal);box-shadow:0 0 6px var(--teal)"></div><div class="chip-text">শান্ত</div></div>
         </div>
-        <div class="card status-item">
-          <div class="si-label">শক্তি</div>
-          <div class="si-val"><span class="si-dot" style="background:#c9a24b"></span><span class="si-text">মাঝারি</span></div>
+        <div class="card status-chip">
+          <div class="chip-label">শক্তি</div>
+          <div class="chip-val"><div class="chip-dot" style="background:var(--gold);box-shadow:0 0 6px var(--gold)"></div><div class="chip-text">মাঝারি</div></div>
         </div>
-        <div class="card status-item">
-          <div class="si-label">কাজের চাপ</div>
-          <div class="si-val"><span class="si-dot" style="background:#d98a5a"></span><span class="si-text">বেশি</span></div>
+        <div class="card status-chip">
+          <div class="chip-label">কাজের চাপ</div>
+          <div class="chip-val"><div class="chip-dot" style="background:var(--amber);box-shadow:0 0 6px var(--amber)"></div><div class="chip-text">বেশি</div></div>
         </div>
-        <div class="card status-item">
-          <div class="si-label">টাকার চাপ</div>
-          <div class="si-val"><span class="si-dot" style="background:#c9a24b"></span><span class="si-text">মাঝারি</span></div>
+        <div class="card status-chip">
+          <div class="chip-label">টাকার চাপ</div>
+          <div class="chip-val"><div class="chip-dot" style="background:var(--gold);box-shadow:0 0 6px var(--gold)"></div><div class="chip-text">মাঝারি</div></div>
         </div>
       </div>
 
       <!-- Priorities -->
       <div class="section-label">আজকের ৩টি প্রধান কাজ</div>
-      <div class="mb-14">
-        <div class="priority-item">
-          <div class="priority-num">১</div>
-          <div class="priority-text">ভেন্ডরের কোটেশন শেষ করো</div>
-          <div class="priority-tag">কাজ</div>
-        </div>
-        <div class="priority-item">
-          <div class="priority-num">২</div>
-          <div class="priority-text">ছুটির দিন নিয়ে আব্বাকে ফোন করো</div>
-          <div class="priority-tag">পরিবার</div>
-        </div>
-        <div class="priority-item" style="margin-bottom:0">
-          <div class="priority-num">৩</div>
-          <div class="priority-text">বিদ্যুৎ বিল পরিশোধ করো</div>
-          <div class="priority-tag">টাকা</div>
-        </div>
+      <div class="mb14">
+        <div class="priority-row"><div class="pnum">১</div><div class="ptext">ভেন্ডরের কোটেশন শেষ করো</div><div class="ptag">কাজ</div></div>
+        <div class="priority-row"><div class="pnum">২</div><div class="ptext">ছুটির দিন নিয়ে আব্বাকে ফোন করো</div><div class="ptag">পরিবার</div></div>
+        <div class="priority-row"><div class="pnum">৩</div><div class="ptext">বিদ্যুৎ বিল পরিশোধ করো</div><div class="ptag">টাকা</div></div>
       </div>
 
-      <!-- Risk warning -->
-      <div class="card-warning mb-18">
+      <!-- Risk -->
+      <div class="card-amber mb20">
         <div class="flex-ai">
-          <div class="warn-icon">!</div>
+          <div class="risk-icon">!</div>
           <div>
-            <div class="warn-title">ঘুম স্বাভাবিকের চেয়ে কম</div>
-            <div class="warn-desc">তুমি ৫ ঘণ্টা ২০ মিনিট ঘুমিয়েছ। আজ রাতে একটু আগে বিশ্রাম নাও, কাল হালকা লাগবে।</div>
+            <div class="risk-title">ঘুম স্বাভাবিকের চেয়ে কম</div>
+            <div class="risk-desc">তুমি ৫ ঘণ্টা ২০ মিনিট ঘুমিয়েছ। আজ রাতে একটু আগে বিশ্রাম নাও, কাল হালকা লাগবে।</div>
           </div>
         </div>
       </div>
 
       <!-- Quick actions -->
       <div class="section-label">দ্রুত কাজ</div>
-      <div class="grid-2">
-        <div class="action-card" onclick="navigate('talk')">
-          <span class="action-glyph">✦</span>
-          <span class="action-label">AI–এর সাথে কথা বলো</span>
-        </div>
-        <div class="action-card" onclick="navigate('record')">
-          <span class="action-glyph">✎</span>
-          <span class="action-label">দৈনিক রেকর্ড যোগ করো</span>
-        </div>
-        <div class="action-card" onclick="navigate('decision')">
-          <span class="action-glyph">⚖</span>
-          <span class="action-label">সিদ্ধান্ত যাচাই করো</span>
-        </div>
-        <div class="action-card" onclick="navigate('private')">
-          <span class="action-glyph">🔒</span>
-          <span class="action-label">ব্যক্তিগত নোট যোগ করো</span>
-        </div>
-        <div class="action-card" onclick="navigate('today')">
-          <span class="action-glyph">◷</span>
-          <span class="action-label">আজকের রিপোর্ট</span>
-        </div>
+      <div class="g2">
+        <div class="action-tile" onclick="navigate('talk')"><div class="action-glyph">✦</div><div class="action-label">AI–এর সাথে কথা বলো</div></div>
+        <div class="action-tile" onclick="navigate('record')"><div class="action-glyph">✎</div><div class="action-label">দৈনিক রেকর্ড যোগ করো</div></div>
+        <div class="action-tile" onclick="navigate('decision')"><div class="action-glyph">⚖</div><div class="action-label">সিদ্ধান্ত যাচাই করো</div></div>
+        <div class="action-tile" onclick="navigate('private')"><div class="action-glyph">🔒</div><div class="action-label">ব্যক্তিগত নোট</div></div>
+        <div class="action-tile" onclick="navigate('reports')"><div class="action-glyph">◷</div><div class="action-label">আজকের রিপোর্ট</div></div>
       </div>
     </div>
 
-    <!-- ======== AI TALK SCREEN ======== -->
+    <!-- ══════════════ AI TALK ══════════════ -->
     <div class="screen" id="screen-talk">
-      <div class="screen-header" style="padding-bottom:16px">
-        <div class="screen-date" style="letter-spacing:.06em">ব্যক্তিগত AI</div>
-        <div class="screen-title" style="font-size:32px;margin-top:4px">AI আলাপ ঘর</div>
+      <div class="page-head">
+        <div class="page-eyebrow">ব্যক্তিগত AI</div>
+        <div class="page-title" style="font-size:30px">AI আলাপ ঘর</div>
       </div>
 
-      <div class="messages-area" id="messagesArea">
+      <div class="messages" id="messagesArea">
         <div class="msg-ai">
           <div class="msg-ai-label">রয়্যাল ব্রেইন</div>
           <div class="msg-ai-text">শুভ সকাল। গত রাতে তোমার ঘুম একটু কম হয়েছে। দিন শুরুর আগে কেমন লাগছে বলো তো?</div>
@@ -762,884 +985,428 @@ body {
         </div>
       </div>
 
-      <!-- Save prompt -->
       <div class="card-purple save-prompt" id="savePrompt">
-        <div class="save-prompt-text">এই কথাগুলো ব্যক্তিগত মনে হচ্ছে। এটা কি দীর্ঘমেয়াদি স্মৃতিতে রাখতে চাও?</div>
-        <div class="save-btns">
+        <div class="save-prompt-text">এই কথাগুলো ব্যক্তিগত মনে হচ্ছে। দীর্ঘমেয়াদি স্মৃতিতে রাখতে চাও?</div>
+        <div class="row">
           <button class="btn-purple" onclick="confirmSave()">স্মৃতিতে রাখো</button>
-          <button class="btn-ghost" onclick="dismissSave()">ব্যক্তিগত রাখো</button>
+          <button class="btn-ghost-sm" onclick="dismissSave()">ব্যক্তিগত রাখো</button>
         </div>
       </div>
 
-      <!-- Action chips -->
-      <div class="chips-wrap">
-        <button class="chip" onclick="showTalkToast('স্মৃতিতে রাখা হয়েছে।')">স্মৃতিতে রাখো</button>
-        <button class="chip" onclick="showTalkToast('ব্যক্তিগত হিসেবে চিহ্নিত করা হলো।')">ব্যক্তিগত হিসেবে রাখো</button>
-        <button class="chip" onclick="showTalkToast('কাজে যোগ করা হয়েছে।')">কাজ হিসেবে যোগ করো</button>
-        <button class="chip" onclick="showTalkToast('সিদ্ধান্ত ঘরে পাঠানো হয়েছে।')">সিদ্ধান্ত হিসেবে যোগ করো</button>
-        <button class="chip" onclick="showTalkToast('আজকের রেকর্ডে যোগ করা হয়েছে।')">দৈনিক রেকর্ডে যোগ করো</button>
+      <div class="chips">
+        <button class="chip" onclick="showToast('talkToast','স্মৃতিতে রাখা হয়েছে।')">স্মৃতিতে রাখো</button>
+        <button class="chip" onclick="showToast('talkToast','ব্যক্তিগত হিসেবে চিহ্নিত করা হলো।')">ব্যক্তিগত রাখো</button>
+        <button class="chip" onclick="showToast('talkToast','কাজে যোগ করা হয়েছে।')">কাজ হিসেবে যোগ করো</button>
+        <button class="chip" onclick="showToast('talkToast','সিদ্ধান্ত ঘরে পাঠানো হয়েছে।')">সিদ্ধান্ত যোগ করো</button>
+        <button class="chip" onclick="showToast('talkToast','রেকর্ডে যোগ করা হয়েছে।')">রেকর্ডে যোগ করো</button>
       </div>
-
       <div class="toast" id="talkToast"></div>
 
-      <!-- Chat input -->
-      <div class="chat-input-wrap">
-        <input class="chat-input" id="chatInput" type="text" placeholder="তোমার ব্রেইনকে যেকোনো কিছু বলো...">
-        <div class="btn-mic">🎙</div>
+      <div class="chat-bar">
+        <input class="chat-input" id="chatInput" placeholder="তোমার ব্রেইনকে যেকোনো কিছু বলো...">
+        <button class="btn-mic">🎙</button>
         <button class="btn-send" onclick="sendMessage()">↑</button>
       </div>
     </div>
 
-    <!-- ======== DAILY RECORD SCREEN ======== -->
+    <!-- ══════════════ DAILY RECORD ══════════════ -->
     <div class="screen" id="screen-record">
-      <div class="screen-header" style="padding-bottom:16px">
-        <div class="screen-date">শুক্রবার · ২৭ জুন</div>
-        <div class="screen-title" style="font-size:32px;margin-top:4px">দৈনিক রেকর্ড</div>
-        <div class="screen-subtitle">আজকের দিনটা মনে রাখতে কয়েক মিনিট।</div>
+      <div class="page-head">
+        <div class="page-eyebrow" id="recordDate">শুক্রবার · ২৭ জুন</div>
+        <div class="page-title" style="font-size:30px">দৈনিক রেকর্ড</div>
+        <div class="page-subtitle">আজকের দিনটা মনে রাখতে কয়েক মিনিট।</div>
       </div>
 
-      <!-- Level pickers -->
-      <div class="card level-card">
-        <div class="level-label">মন</div>
-        <div class="level-options" data-field="mood">
-          <button class="level-opt" data-idx="0" data-low onclick="selectLevel(this,'mood',0,'low')">কম</button>
-          <button class="level-opt" data-idx="1" data-mid onclick="selectLevel(this,'mood',1,'mid')">ঠিক আছে</button>
-          <button class="level-opt" data-idx="2" data-high onclick="selectLevel(this,'mood',2,'high')">ভালো</button>
-        </div>
-      </div>
-      <div class="card level-card">
-        <div class="level-label">শক্তি</div>
-        <div class="level-options" data-field="energy">
-          <button class="level-opt" onclick="selectLevel(this,'energy',0,'low')">ক্লান্ত</button>
-          <button class="level-opt" onclick="selectLevel(this,'energy',1,'mid')">মাঝারি</button>
-          <button class="level-opt" onclick="selectLevel(this,'energy',2,'high')">সতেজ</button>
-        </div>
-      </div>
-      <div class="card level-card" style="margin-bottom:0">
-        <div class="level-label">চাপ</div>
-        <div class="level-options" data-field="stress">
-          <button class="level-opt" onclick="selectLevel(this,'stress',0,'high')">শান্ত</button>
-          <button class="level-opt" onclick="selectLevel(this,'stress',1,'mid')">কিছুটা</button>
-          <button class="level-opt" onclick="selectLevel(this,'stress',2,'low')">বেশি</button>
-        </div>
-      </div>
+      <div class="card mb8"><div class="level-label">মন</div><div class="level-opts" data-field="mood"><button class="level-opt" onclick="pickLevel(this,'low')">কম</button><button class="level-opt" onclick="pickLevel(this,'mid')">ঠিক আছে</button><button class="level-opt" onclick="pickLevel(this,'high')">ভালো</button></div></div>
+      <div class="card mb8"><div class="level-label">শক্তি</div><div class="level-opts" data-field="energy"><button class="level-opt" onclick="pickLevel(this,'low')">ক্লান্ত</button><button class="level-opt" onclick="pickLevel(this,'mid')">মাঝারি</button><button class="level-opt" onclick="pickLevel(this,'high')">সতেজ</button></div></div>
+      <div class="card mb12"><div class="level-label">চাপ</div><div class="level-opts" data-field="stress"><button class="level-opt" onclick="pickLevel(this,'high')">শান্ত</button><button class="level-opt" onclick="pickLevel(this,'mid')">কিছুটা</button><button class="level-opt" onclick="pickLevel(this,'low')">বেশি</button></div></div>
 
-      <!-- Text fields -->
-      <div style="margin-top:12px">
-        <div class="card text-field">
-          <div class="field-label">ঘুম</div>
-          <input class="field-input" type="text" placeholder="কত ঘণ্টা ঘুমিয়েছ?">
-        </div>
-        <div class="card text-field">
-          <div class="field-label">খাবার</div>
-          <input class="field-input" type="text" placeholder="আজ কী খেয়েছ?">
-        </div>
-        <div class="card text-field">
-          <div class="field-label">কাজের অগ্রগতি</div>
-          <input class="field-input" type="text" placeholder="কী কী শেষ করেছ?">
-        </div>
-        <div class="card text-field">
-          <div class="field-label">খরচ</div>
-          <input class="field-input" type="text" placeholder="গুরুত্বপূর্ণ কোনো খরচ?">
-        </div>
-        <div class="card text-field" style="margin-bottom:0">
-          <div class="field-label">ব্যক্তিগত ভাবনা</div>
-          <input class="field-input" type="text" placeholder="আজকের একটা ভাবনা...">
-        </div>
-      </div>
+      <div class="card mb8"><div class="field-label">ঘুম</div><input class="field-input" placeholder="কত ঘণ্টা ঘুমিয়েছ?"></div>
+      <div class="card mb8"><div class="field-label">খাবার</div><input class="field-input" placeholder="আজ কী খেয়েছ?"></div>
+      <div class="card mb8"><div class="field-label">কাজের অগ্রগতি</div><input class="field-input" placeholder="কী কী শেষ করেছ?"></div>
+      <div class="card mb8"><div class="field-label">খরচ</div><input class="field-input" placeholder="গুরুত্বপূর্ণ কোনো খরচ?"></div>
+      <div class="card"><div class="field-label">ব্যক্তিগত ভাবনা</div><input class="field-input" placeholder="আজকের একটা ভাবনা..."></div>
 
-      <button class="btn-primary" onclick="saveRecord()">আজকের রেকর্ড সংরক্ষণ করো</button>
+      <button class="btn-gold" onclick="saveRecord()">আজকের রেকর্ড সংরক্ষণ করো</button>
       <div class="toast" id="recordToast"></div>
     </div>
 
-    <!-- ======== ALL ROOMS SCREEN ======== -->
+    <!-- ══════════════ ALL ROOMS ══════════════ -->
     <div class="screen" id="screen-rooms">
-      <div class="screen-header" style="padding-bottom:16px">
-        <div class="screen-date" style="letter-spacing:.06em">তোমার ডিজিটাল ঘর</div>
-        <div class="screen-title" style="font-size:32px;margin-top:4px">সব ঘর</div>
+      <div class="page-head">
+        <div class="page-eyebrow">তোমার ডিজিটাল ঘর</div>
+        <div class="page-title" style="font-size:30px">সব ঘর</div>
       </div>
-
-      <div class="grid-2">
-        <div class="room-card" onclick="navigate('today')">
-          <div class="room-top"><span class="room-glyph">◇</span></div>
-          <div><div class="room-name">আজকের কেন্দ্র</div><div class="room-desc">এক নজরে তোমার দিন</div></div>
-        </div>
-        <div class="room-card" onclick="navigate('talk')">
-          <div class="room-top"><span class="room-glyph">✦</span></div>
-          <div><div class="room-name">AI আলাপ ঘর</div><div class="room-desc">তোমার ব্রেইনের সাথে কথা</div></div>
-        </div>
-        <div class="room-card" onclick="navigate('record')">
-          <div class="room-top"><span class="room-glyph">✎</span></div>
-          <div><div class="room-name">দৈনিক রেকর্ড</div><div class="room-desc">আজকের দিন মনে রাখো</div></div>
-        </div>
-        <div class="room-card" onclick="navigate('private')">
-          <div class="room-top"><span class="room-glyph">🔒</span><span class="room-lock">🔒</span></div>
-          <div><div class="room-name">ব্যক্তিগত ঘর</div><div class="room-desc">তোমার গভীর নোট</div></div>
-        </div>
-        <div class="room-card" onclick="navigate('vault')">
-          <div class="room-top"><span class="room-glyph">🛡</span><span class="room-lock">🔒</span></div>
-          <div><div class="room-name">নিরাপদ ভল্ট</div><div class="room-desc">গুরুত্বপূর্ণ কাগজপত্র</div></div>
-        </div>
-        <div class="room-card" onclick="navigate('memory')">
-          <div class="room-top"><span class="room-glyph">◈</span></div>
-          <div><div class="room-name">স্মৃতি লাইব্রেরি</div><div class="room-desc">যা আমি মনে রাখি</div></div>
-        </div>
-        <div class="room-card" onclick="navigate('family')">
-          <div class="room-top"><span class="room-glyph">♡</span></div>
-          <div><div class="room-name">পরিবার কেন্দ্র</div><div class="room-desc">যাদের ভালোবাসি</div></div>
-        </div>
-        <div class="room-card" onclick="navigate('family')">
-          <div class="room-top"><span class="room-glyph">◔</span></div>
-          <div><div class="room-name">মানুষ কেন্দ্র</div><div class="room-desc">গুরুত্বপূর্ণ যোগাযোগ</div></div>
-        </div>
-        <div class="room-card" onclick="navigate('finance')">
-          <div class="room-top"><span class="room-glyph">₿</span></div>
-          <div><div class="room-name">অর্থ কেন্দ্র</div><div class="room-desc">টাকা ও বাজেট</div></div>
-        </div>
-        <div class="room-card" onclick="navigate('work')">
-          <div class="room-top"><span class="room-glyph">▤</span></div>
-          <div><div class="room-name">কাজ কেন্দ্র</div><div class="room-desc">কাজ ও ভেন্ডর</div></div>
-        </div>
-        <div class="room-card" onclick="navigate('decision')">
-          <div class="room-top"><span class="room-glyph">⚖</span></div>
-          <div><div class="room-name">সিদ্ধান্ত ঘর</div><div class="room-desc">কাজের আগে ভাবো</div></div>
-        </div>
-        <div class="room-card" onclick="navigate('photos')">
-          <div class="room-top"><span class="room-glyph">▣</span></div>
-          <div><div class="room-name">ছবি ও নথি</div><div class="room-desc">ফাইল ও স্মৃতি</div></div>
-        </div>
-        <div class="room-card" onclick="navigate('google')">
-          <div class="room-top"><span class="room-glyph">◉</span></div>
-          <div><div class="room-name">গুগল কেন্দ্র</div><div class="room-desc">যুক্ত সেবাসমূহ</div></div>
-        </div>
-        <div class="room-card" onclick="navigate('risk')">
-          <div class="room-top"><span class="room-glyph">△</span></div>
-          <div><div class="room-name">ঝুঁকি সতর্কতা</div><div class="room-desc">নরম জীবন সতর্কতা</div></div>
-        </div>
-        <div class="room-card" onclick="navigate('reports')">
-          <div class="room-top"><span class="room-glyph">◷</span></div>
-          <div><div class="room-name">জীবন রিপোর্ট</div><div class="room-desc">সাপ্তাহিক ও মাসিক</div></div>
-        </div>
-        <div class="room-card" onclick="navigate('security')">
-          <div class="room-top"><span class="room-glyph">⛉</span></div>
-          <div><div class="room-name">নিরাপত্তা কেন্দ্র</div><div class="room-desc">গোপনীয়তা ও প্রবেশ</div></div>
-        </div>
+      <div class="g2">
+        <div class="room-card" onclick="navigate('today')"><div class="room-top"><span class="room-glyph">◇</span></div><div class="room-name">আজকের কেন্দ্র</div><div class="room-desc">এক নজরে তোমার দিন</div></div>
+        <div class="room-card" onclick="navigate('talk')"><div class="room-top"><span class="room-glyph">✦</span></div><div class="room-name">AI আলাপ ঘর</div><div class="room-desc">তোমার ব্রেইনের সাথে কথা</div></div>
+        <div class="room-card" onclick="navigate('record')"><div class="room-top"><span class="room-glyph">✎</span></div><div class="room-name">দৈনিক রেকর্ড</div><div class="room-desc">আজকের দিন মনে রাখো</div></div>
+        <div class="room-card" onclick="navigate('private')"><div class="room-top"><span class="room-glyph">🔒</span><span class="room-lock">🔒</span></div><div class="room-name">ব্যক্তিগত ঘর</div><div class="room-desc">তোমার গভীর নোট</div></div>
+        <div class="room-card" onclick="navigate('vault')"><div class="room-top"><span class="room-glyph">🛡</span><span class="room-lock">🔒</span></div><div class="room-name">নিরাপদ ভল্ট</div><div class="room-desc">গুরুত্বপূর্ণ কাগজপত্র</div></div>
+        <div class="room-card" onclick="navigate('memory')"><div class="room-top"><span class="room-glyph">◈</span></div><div class="room-name">স্মৃতি লাইব্রেরি</div><div class="room-desc">যা আমি মনে রাখি</div></div>
+        <div class="room-card" onclick="navigate('family')"><div class="room-top"><span class="room-glyph">♡</span></div><div class="room-name">পরিবার কেন্দ্র</div><div class="room-desc">যাদের ভালোবাসি</div></div>
+        <div class="room-card" onclick="navigate('family')"><div class="room-top"><span class="room-glyph">◔</span></div><div class="room-name">মানুষ কেন্দ্র</div><div class="room-desc">গুরুত্বপূর্ণ যোগাযোগ</div></div>
+        <div class="room-card" onclick="navigate('finance')"><div class="room-top"><span class="room-glyph">₿</span></div><div class="room-name">অর্থ কেন্দ্র</div><div class="room-desc">টাকা ও বাজেট</div></div>
+        <div class="room-card" onclick="navigate('work')"><div class="room-top"><span class="room-glyph">▤</span></div><div class="room-name">কাজ কেন্দ্র</div><div class="room-desc">কাজ ও ভেন্ডর</div></div>
+        <div class="room-card" onclick="navigate('decision')"><div class="room-top"><span class="room-glyph">⚖</span></div><div class="room-name">সিদ্ধান্ত ঘর</div><div class="room-desc">কাজের আগে ভাবো</div></div>
+        <div class="room-card" onclick="navigate('photos')"><div class="room-top"><span class="room-glyph">▣</span></div><div class="room-name">ছবি ও নথি</div><div class="room-desc">ফাইল ও স্মৃতি</div></div>
+        <div class="room-card" onclick="navigate('google')"><div class="room-top"><span class="room-glyph">◉</span></div><div class="room-name">গুগল কেন্দ্র</div><div class="room-desc">যুক্ত সেবাসমূহ</div></div>
+        <div class="room-card" onclick="navigate('risk')"><div class="room-top"><span class="room-glyph">△</span></div><div class="room-name">ঝুঁকি সতর্কতা</div><div class="room-desc">জীবন সতর্কতা</div></div>
+        <div class="room-card" onclick="navigate('reports')"><div class="room-top"><span class="room-glyph">◷</span></div><div class="room-name">জীবন রিপোর্ট</div><div class="room-desc">সাপ্তাহিক ও মাসিক</div></div>
+        <div class="room-card" onclick="navigate('security')"><div class="room-top"><span class="room-glyph">⛉</span></div><div class="room-name">নিরাপত্তা কেন্দ্র</div><div class="room-desc">গোপনীয়তা ও প্রবেশ</div></div>
       </div>
     </div>
 
-    <!-- ======== MEMORY LIBRARY SCREEN ======== -->
+    <!-- ══════════════ MEMORY ══════════════ -->
     <div class="screen" id="screen-memory">
-      <div class="screen-header-row">
-        <div>
-          <div class="screen-date" style="letter-spacing:.06em">যা আমি মনে রাখি</div>
-          <div class="screen-title" style="font-size:32px;margin-top:4px">স্মৃতি লাইব্রেরি</div>
-        </div>
+      <div class="page-head-row">
+        <div><div class="page-eyebrow">যা আমি মনে রাখি</div><div class="page-title" style="font-size:30px">স্মৃতি লাইব্রেরি</div></div>
         <button class="back-btn" onclick="navigate('rooms')">ঘর</button>
       </div>
-
-      <!-- AI suggestion -->
-      <div class="card-purple mb-14">
-        <div class="ai-suggest">
-          <span style="font-size:16px">✨</span>
+      <div class="card-purple mb14">
+        <div class="ai-sug-body">
+          <span style="font-size:18px">✨</span>
           <div style="flex:1">
-            <div class="ai-suggest-text">আজকের রেকর্ড থেকে একটা নতুন স্মৃতি পেলাম: <b style="color:#fff">"তুমি ভোরবেলা সবচেয়ে ভালো মনোযোগ দিতে পারো।"</b></div>
-            <div class="ai-suggest-btns">
-              <button class="btn-small-purple" onclick="showMemToast('নতুন স্মৃতি রাখা হয়েছে।')">স্মৃতি রাখো</button>
-              <button class="btn-small-ghost" onclick="showMemToast('ঠিক আছে, রাখা হয়নি।')">এখন নয়</button>
+            <div class="ai-sug-text">আজকের রেকর্ড থেকে একটা নতুন স্মৃতি পেলাম: <b style="color:#fff">"তুমি ভোরবেলা সবচেয়ে ভালো মনোযোগ দিতে পারো।"</b></div>
+            <div class="ai-sug-btns">
+              <button class="btn-sm-purple" onclick="showToast('memToast','নতুন স্মৃতি রাখা হয়েছে।')">স্মৃতি রাখো</button>
+              <button class="btn-sm-ghost" onclick="showToast('memToast','ঠিক আছে, রাখা হয়নি।')">এখন নয়</button>
             </div>
           </div>
         </div>
       </div>
       <div class="toast" id="memToast"></div>
-
-      <!-- Memory list -->
-      <div class="card mb-10">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <span class="mem-type" style="color:#c9a24b">পরিচয়</span>
-          <span class="mem-date">১২ জুন</span>
-        </div>
-        <div class="mem-title">কঠিন কথায় আরামের চেয়ে সততাকে বেশি দাম দিই।</div>
-        <div class="mem-meta">ব্যক্তিগত · আস্থা বেশি</div>
-      </div>
-      <div class="card mb-10">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <span class="mem-type" style="color:#7fc79a">স্বাস্থ্যের ধরন</span>
-          <span class="mem-date">০৯ জুন</span>
-        </div>
-        <div class="mem-title">৬ ঘণ্টার কম ঘুমালে আমার শক্তি কমে যায়।</div>
-        <div class="mem-meta">ব্যক্তিগত · আস্থা বেশি</div>
-      </div>
-      <div class="card mb-10">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <span class="mem-type" style="color:#d98a5a">পরিবার</span>
-          <span class="mem-date">০২ জুন</span>
-        </div>
-        <div class="mem-title">আব্বা শুক্রবার সন্ধ্যায় ফোন পছন্দ করেন।</div>
-        <div class="mem-meta">পরিবার · আস্থা মাঝারি</div>
-      </div>
-      <div class="card mb-10">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <span class="mem-type" style="color:#c9a24b">টাকার ধরন</span>
-          <span class="mem-date">২৮ মে</span>
-        </div>
-        <div class="mem-title">চাপে থাকলে খাবার ডেলিভারিতে বেশি খরচ করি।</div>
-        <div class="mem-meta">ব্যক্তিগত · আস্থা বেশি</div>
-      </div>
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <span class="mem-type" style="color:#6c5ce7">জীবনের শিক্ষা</span>
-          <span class="mem-date">২০ মে</span>
-        </div>
-        <div class="mem-title">আগেভাগে "না" বললে কয়েক সপ্তাহের আফসোস বাঁচে।</div>
-        <div class="mem-meta">ব্যক্তিগত · আস্থা মাঝারি</div>
-      </div>
+      <div class="card mb8"><div class="mem-header"><span class="mem-type" style="color:var(--gold)">পরিচয়</span><span class="mem-date">১২ জুন</span></div><div class="mem-title">কঠিন কথায় আরামের চেয়ে সততাকে বেশি দাম দিই।</div><div class="mem-footer"><span class="mem-tag">ব্যক্তিগত</span><span class="mem-tag">আস্থা বেশি</span></div></div>
+      <div class="card mb8"><div class="mem-header"><span class="mem-type" style="color:var(--teal)">স্বাস্থ্যের ধরন</span><span class="mem-date">০৯ জুন</span></div><div class="mem-title">৬ ঘণ্টার কম ঘুমালে আমার শক্তি কমে যায়।</div><div class="mem-footer"><span class="mem-tag">ব্যক্তিগত</span><span class="mem-tag">আস্থা বেশি</span></div></div>
+      <div class="card mb8"><div class="mem-header"><span class="mem-type" style="color:var(--amber)">পরিবার</span><span class="mem-date">০২ জুন</span></div><div class="mem-title">আব্বা শুক্রবার সন্ধ্যায় ফোন পছন্দ করেন।</div><div class="mem-footer"><span class="mem-tag">পরিবার</span><span class="mem-tag">আস্থা মাঝারি</span></div></div>
+      <div class="card mb8"><div class="mem-header"><span class="mem-type" style="color:var(--gold)">টাকার ধরন</span><span class="mem-date">২৮ মে</span></div><div class="mem-title">চাপে থাকলে খাবার ডেলিভারিতে বেশি খরচ করি।</div><div class="mem-footer"><span class="mem-tag">ব্যক্তিগত</span><span class="mem-tag">আস্থা বেশি</span></div></div>
+      <div class="card"><div class="mem-header"><span class="mem-type" style="color:var(--purple)">জীবনের শিক্ষা</span><span class="mem-date">২০ মে</span></div><div class="mem-title">আগেভাগে "না" বললে কয়েক সপ্তাহের আফসোস বাঁচে।</div><div class="mem-footer"><span class="mem-tag">ব্যক্তিগত</span><span class="mem-tag">আস্থা মাঝারি</span></div></div>
     </div>
 
-    <!-- ======== FAMILY HUB SCREEN ======== -->
+    <!-- ══════════════ FAMILY ══════════════ -->
     <div class="screen" id="screen-family">
-      <div class="screen-header-row">
-        <div>
-          <div class="screen-date" style="letter-spacing:.06em">যাদের ভালোবাসি</div>
-          <div class="screen-title" style="font-size:32px;margin-top:4px">পরিবার কেন্দ্র</div>
-        </div>
+      <div class="page-head-row">
+        <div><div class="page-eyebrow">যাদের ভালোবাসি</div><div class="page-title" style="font-size:30px">পরিবার কেন্দ্র</div></div>
         <button class="back-btn" onclick="navigate('rooms')">ঘর</button>
       </div>
-
-      <div class="family-card">
-        <div class="avatar" style="background:#c9a24b">আ</div>
-        <div style="flex:1">
-          <div class="family-name">আব্বা</div>
-          <div class="family-rel">বাবা · শুক্রবারে ফোন করো</div>
-        </div>
-        <div class="family-next">জন্মদিন ৯ দিন পরে</div>
-      </div>
-      <div class="family-card">
-        <div class="avatar" style="background:#d98a5a">ম</div>
-        <div style="flex:1">
-          <div class="family-name">আম্মা</div>
-          <div class="family-rel">মা · জুঁই ফুল ভালোবাসেন</div>
-        </div>
-        <div class="family-next">এই সপ্তাহে দেখা করো</div>
-      </div>
-      <div class="family-card">
-        <div class="avatar" style="background:#6c5ce7">না</div>
-        <div style="flex:1">
-          <div class="family-name">নাদিয়া</div>
-          <div class="family-rel">স্ত্রী · জুলাইয়ে বিবাহবার্ষিকী</div>
-        </div>
-        <div class="family-next">ডিনার পরিকল্পনা করো</div>
-      </div>
-      <div class="family-card" style="margin-bottom:0">
-        <div class="avatar" style="background:#7fc79a">রা</div>
-        <div style="flex:1">
-          <div class="family-name">রায়ান</div>
-          <div class="family-rel">ছেলে · সামনের সপ্তাহে পরীক্ষা</div>
-        </div>
-        <div class="family-next">পড়াশোনায় সাহায্য করো</div>
-      </div>
+      <div class="family-row"><div class="avatar" style="background:var(--gold)">আ</div><div style="flex:1"><div class="family-name">আব্বা</div><div class="family-rel">বাবা · শুক্রবারে ফোন করো</div></div><div class="family-next">জন্মদিন ৯ দিন পরে</div></div>
+      <div class="family-row"><div class="avatar" style="background:var(--amber)">ম</div><div style="flex:1"><div class="family-name">আম্মা</div><div class="family-rel">মা · জুঁই ফুল ভালোবাসেন</div></div><div class="family-next">এই সপ্তাহে দেখা করো</div></div>
+      <div class="family-row"><div class="avatar" style="background:var(--purple)">না</div><div style="flex:1"><div class="family-name">নাদিয়া</div><div class="family-rel">স্ত্রী · জুলাইয়ে বিবাহবার্ষিকী</div></div><div class="family-next">ডিনার পরিকল্পনা করো</div></div>
+      <div class="family-row"><div class="avatar" style="background:var(--teal)">রা</div><div style="flex:1"><div class="family-name">রায়ান</div><div class="family-rel">ছেলে · সামনের সপ্তাহে পরীক্ষা</div></div><div class="family-next">পড়াশোনায় সাহায্য করো</div></div>
     </div>
 
-    <!-- ======== DECISION ROOM SCREEN ======== -->
+    <!-- ══════════════ DECISION ══════════════ -->
     <div class="screen" id="screen-decision">
-      <div class="screen-header-row">
-        <div>
-          <div class="screen-date" style="letter-spacing:.06em">কাজের আগে ভাবো</div>
-          <div class="screen-title" style="font-size:32px;margin-top:4px">সিদ্ধান্ত ঘর</div>
-        </div>
+      <div class="page-head-row">
+        <div><div class="page-eyebrow">কাজের আগে ভাবো</div><div class="page-title" style="font-size:30px">সিদ্ধান্ত ঘর</div></div>
         <button class="back-btn" onclick="navigate('rooms')">ঘর</button>
       </div>
-
-      <div class="card mb-14" style="border-radius:20px;padding:18px">
-        <div style="font-size:12px;color:#7a7a88;margin-bottom:6px">বর্তমান সিদ্ধান্ত</div>
-        <div class="decision-title">এই মাসে কি কাজের জন্য নতুন ল্যাপটপ কিনব?</div>
-
-        <div class="grid-2" style="margin-bottom:0">
-          <div class="impact-item">
-            <div class="impact-label">টাকার প্রভাব</div>
-            <div class="impact-val" style="color:#d98a5a">বেশি</div>
-          </div>
-          <div class="impact-item">
-            <div class="impact-label">কাজের প্রভাব</div>
-            <div class="impact-val" style="color:#7fc79a">সহায়ক</div>
-          </div>
-          <div class="impact-item" style="margin-top:10px">
-            <div class="impact-label">পরিবারের প্রভাব</div>
-            <div class="impact-val" style="color:#8a8a98">কম</div>
-          </div>
-          <div class="impact-item" style="margin-top:10px">
-            <div class="impact-label">প্রয়োজনীয় শক্তি</div>
-            <div class="impact-val" style="color:#c9a24b">মাঝারি</div>
-          </div>
+      <div class="card mb14" style="border-radius:22px;padding:18px">
+        <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em">বর্তমান সিদ্ধান্ত</div>
+        <div class="dec-question">এই মাসে কি কাজের জন্য নতুন ল্যাপটপ কিনব?</div>
+        <div class="g2 mb14">
+          <div class="impact-box"><div class="impact-label">টাকার প্রভাব</div><div class="impact-val" style="color:var(--amber)">বেশি</div></div>
+          <div class="impact-box"><div class="impact-label">কাজের প্রভাব</div><div class="impact-val" style="color:var(--teal)">সহায়ক</div></div>
+          <div class="impact-box"><div class="impact-label">পরিবারের প্রভাব</div><div class="impact-val" style="color:var(--t3)">কম</div></div>
+          <div class="impact-box"><div class="impact-label">প্রয়োজনীয় শক্তি</div><div class="impact-val" style="color:var(--gold)">মাঝারি</div></div>
         </div>
-
-        <div class="flex-gap" style="margin-top:14px">
-          <div class="score-box" style="background:rgba(196,116,72,0.10);border:1px solid rgba(196,116,72,0.28)">
-            <div class="score-label" style="color:#d98a5a">ঝুঁকি স্কোর</div>
-            <div class="score-num" style="color:#e3a878">৪ / ১০</div>
-          </div>
-          <div class="score-box" style="background:rgba(94,164,120,0.10);border:1px solid rgba(94,164,120,0.28)">
-            <div class="score-label" style="color:#7fc79a">উপকার স্কোর</div>
-            <div class="score-num" style="color:#8fd6aa">৭ / ১০</div>
-          </div>
+        <div class="row">
+          <div class="score-box" style="background:var(--amber-dim);border:1px solid rgba(224,128,96,0.25)"><div class="score-label" style="color:var(--amber)">ঝুঁকি স্কোর</div><div class="score-num" style="color:#e8a878">৪/১০</div></div>
+          <div class="score-box" style="background:var(--teal-dim);border:1px solid rgba(78,203,163,0.25)"><div class="score-label" style="color:var(--teal)">উপকার স্কোর</div><div class="score-num" style="color:#7ed8c0">৭/১০</div></div>
         </div>
       </div>
-
-      <div class="card-royal mb-14" style="border-radius:18px">
+      <div class="card-gold mb14">
         <div class="ai-advice-label">AI পরামর্শ</div>
-        <div style="font-size:15px;line-height:1.6;color:#e9e6dc">উপকার সত্যিই আছে, তবে এই মাসে টাকার চাপ বেশি। ভালো একটা মাঝামাঝি পথ: একটা স্পষ্ট বাজেট ঠিক করো, তারপর দুই সপ্তাহ অপেক্ষা করো। চূড়ান্ত সিদ্ধান্ত তুমিই নেবে।</div>
+        <div style="font-size:14px;line-height:1.65;color:#d8d5cc">উপকার সত্যিই আছে, তবে এই মাসে টাকার চাপ বেশি। ভালো একটা মাঝামাঝি পথ: একটা স্পষ্ট বাজেট ঠিক করো, তারপর দুই সপ্তাহ অপেক্ষা করো। চূড়ান্ত সিদ্ধান্ত তুমিই নেবে।</div>
       </div>
-
-      <div class="flex-gap">
-        <button class="btn-primary" style="margin:0;flex:1;border-radius:14px;padding:13px;font-size:14px">পরে সিদ্ধান্ত নাও</button>
-        <button class="btn-outline" style="margin:0;flex:1;border-radius:14px;padding:13px;font-size:14px">সিদ্ধান্ত লেখো</button>
+      <div class="row">
+        <button class="btn-gold" style="margin:0;flex:1;border-radius:12px;padding:13px;font-size:14px">পরে সিদ্ধান্ত নাও</button>
+        <button class="btn-ghost" style="margin:0;flex:1;border-radius:12px;padding:13px;font-size:14px">সিদ্ধান্ত লেখো</button>
       </div>
-      <div style="text-align:center;font-size:12px;color:#7a7a88;margin-top:12px">AI পরামর্শ দিতে পারে। চূড়ান্ত সিদ্ধান্ত সবসময় তুমিই নেবে।</div>
+      <div style="text-align:center;font-size:11px;color:var(--t3);margin-top:12px">AI পরামর্শ দিতে পারে। চূড়ান্ত সিদ্ধান্ত সবসময় তুমিই নেবে।</div>
     </div>
 
-    <!-- ======== FINANCE SCREEN ======== -->
+    <!-- ══════════════ FINANCE ══════════════ -->
     <div class="screen" id="screen-finance">
-      <div class="screen-header-row">
-        <div>
-          <div class="screen-date" style="letter-spacing:.06em">এই মাস</div>
-          <div class="screen-title" style="font-size:32px;margin-top:4px">অর্থ কেন্দ্র</div>
-        </div>
+      <div class="page-head-row">
+        <div><div class="page-eyebrow">এই মাস</div><div class="page-title" style="font-size:30px">অর্থ কেন্দ্র</div></div>
         <button class="back-btn" onclick="navigate('rooms')">ঘর</button>
       </div>
-
-      <div class="card-royal mb-14" style="border-radius:22px;padding:20px">
-        <div class="balance-label">এই মাসে বাকি টাকা</div>
-        <div class="balance-amount">৳ ২৮,৪০০</div>
-        <div class="progress-track">
-          <div class="progress-fill" style="width:64%;background:#c9a24b"></div>
-        </div>
-        <div class="progress-labels">
-          <span>খরচ ৳ ৫১,৬০০</span>
-          <span>বাজেট ৳ ৮০,০০০</span>
-        </div>
+      <div class="card-gold mb14">
+        <div class="balance-eyebrow">এই মাসে বাকি টাকা</div>
+        <div class="balance-big">৳ ২৮,৪০০</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:64%"></div></div>
+        <div class="progress-meta"><span>খরচ ৳ ৫১,৬০০</span><span>বাজেট ৳ ৮০,০০০</span></div>
       </div>
-
-      <div class="grid-2 mb-14">
-        <div class="card finance-stat">
-          <div class="stat-label">আয়</div>
-          <div class="stat-val" style="color:#7fc79a">৳ ১,২০,০০০</div>
-        </div>
-        <div class="card finance-stat">
-          <div class="stat-label">সঞ্চয়</div>
-          <div class="stat-val" style="color:#f4f2ec">৳ ৩,৪০,০০০</div>
-        </div>
-        <div class="card finance-stat">
-          <div class="stat-label">ঋণ / দেনা</div>
-          <div class="stat-val" style="color:#d98a5a">৳ ৪৫,০০০</div>
-        </div>
-        <div class="card finance-stat">
-          <div class="stat-label">এই সপ্তাহে দেয়</div>
-          <div class="stat-val" style="color:#c9a24b">৳ ৬,২০০</div>
-        </div>
+      <div class="g2 mb14">
+        <div class="card"><div class="stat-label">আয়</div><div class="stat-val" style="color:var(--teal)">৳ ১,২০,০০০</div></div>
+        <div class="card"><div class="stat-label">সঞ্চয়</div><div class="stat-val" style="color:var(--t1)">৳ ৩,৪০,০০০</div></div>
+        <div class="card"><div class="stat-label">ঋণ / দেনা</div><div class="stat-val" style="color:var(--amber)">৳ ৪৫,০০০</div></div>
+        <div class="card"><div class="stat-label">এই সপ্তাহে দেয়</div><div class="stat-val" style="color:var(--gold)">৳ ৬,২০০</div></div>
       </div>
-
-      <div class="card-royal" style="border-radius:18px">
+      <div class="card-gold">
         <div class="ai-advice-label">AI টাকার পরামর্শ</div>
-        <div style="font-size:15px;line-height:1.6;color:#e9e6dc">এই মাসে তোমার বেশিরভাগ খরচ হয়েছে খাবার ডেলিভারিতে। সপ্তাহে দুদিন বাসায় রান্না করলে প্রায় ৳ ৬,০০০ বাঁচতে পারে।</div>
-        <div style="font-size:12px;color:#7a7a88;margin-top:10px">AI কখনো তোমার টাকা সরায় না। শুধু বুঝতে সাহায্য করে।</div>
+        <div style="font-size:14px;line-height:1.65;color:#d8d5cc">এই মাসে তোমার বেশিরভাগ খরচ হয়েছে খাবার ডেলিভারিতে। সপ্তাহে দুদিন বাসায় রান্না করলে প্রায় ৳ ৬,০০০ বাঁচতে পারে।</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:10px">AI কখনো তোমার টাকা সরায় না। শুধু বুঝতে সাহায্য করে।</div>
       </div>
     </div>
 
-    <!-- ======== PRIVATE ROOM SCREEN ======== -->
+    <!-- ══════════════ PRIVATE ══════════════ -->
     <div class="screen" id="screen-private">
-      <div class="screen-header-row">
-        <div>
-          <div class="screen-date" style="letter-spacing:.06em">শুধু তোমার জন্য</div>
-          <div class="screen-title" style="font-size:32px;margin-top:4px">ব্যক্তিগত ঘর</div>
-        </div>
+      <div class="page-head-row">
+        <div><div class="page-eyebrow">শুধু তোমার জন্য</div><div class="page-title" style="font-size:30px">ব্যক্তিগত ঘর</div></div>
         <button class="back-btn" onclick="navigate('rooms')">ঘর</button>
       </div>
-
-      <!-- Lock screen -->
-      <div id="privateLockScreen" class="lock-box">
-        <div class="lock-icon">🔒</div>
+      <div id="privateLock" class="lock-shell">
+        <div class="lock-icon-wrap">🔒</div>
         <div class="lock-title">এই ঘর তালাবদ্ধ</div>
-        <div class="lock-desc">এই ঘরে তোমার সবচেয়ে গভীর, ব্যক্তিগত নোট থাকে। খুলতে পিন দাও।</div>
+        <div class="lock-desc">সবচেয়ে গভীর, ব্যক্তিগত নোট এখানে থাকে। খুলতে পিন দাও।</div>
         <div class="pin-dots" id="pinDots">
-          <div class="pin-dot" id="dot0"></div>
-          <div class="pin-dot" id="dot1"></div>
-          <div class="pin-dot" id="dot2"></div>
-          <div class="pin-dot" id="dot3"></div>
+          <div class="pin-dot" id="dot0"></div><div class="pin-dot" id="dot1"></div><div class="pin-dot" id="dot2"></div><div class="pin-dot" id="dot3"></div>
         </div>
         <div class="keypad">
-          <button class="key-btn" onclick="pressKey('১')">১</button>
-          <button class="key-btn" onclick="pressKey('২')">২</button>
-          <button class="key-btn" onclick="pressKey('৩')">৩</button>
-          <button class="key-btn" onclick="pressKey('৪')">৪</button>
-          <button class="key-btn" onclick="pressKey('৫')">৫</button>
-          <button class="key-btn" onclick="pressKey('৬')">৬</button>
-          <button class="key-btn" onclick="pressKey('৭')">৭</button>
-          <button class="key-btn" onclick="pressKey('৮')">৮</button>
-          <button class="key-btn" onclick="pressKey('৯')">৯</button>
-          <button class="key-btn" style="font-size:13px;opacity:.4"></button>
-          <button class="key-btn" onclick="pressKey('০')">০</button>
-          <button class="key-btn" onclick="pressKey('⌫')" style="font-size:16px">⌫</button>
+          <button class="key" onclick="pressKey('১')">১</button><button class="key" onclick="pressKey('২')">২</button><button class="key" onclick="pressKey('৩')">৩</button>
+          <button class="key" onclick="pressKey('৪')">৪</button><button class="key" onclick="pressKey('৫')">৫</button><button class="key" onclick="pressKey('৬')">৬</button>
+          <button class="key" onclick="pressKey('৭')">৭</button><button class="key" onclick="pressKey('৮')">৮</button><button class="key" onclick="pressKey('৯')">৯</button>
+          <button class="key" style="opacity:.3;cursor:default"></button><button class="key" onclick="pressKey('০')">০</button><button class="key" onclick="pressKey('⌫')" style="font-size:17px">⌫</button>
         </div>
-        <div class="lock-hint">টিপ: ডেমোতে যেকোনো ৪ সংখ্যা দিলেই খুলবে।</div>
+        <div class="lock-hint">ডেমোতে যেকোনো ৪ সংখ্যা দিলেই খুলবে</div>
       </div>
-
-      <!-- Open content -->
-      <div id="privateOpenContent" class="private-content">
-        <div class="card-purple mb-14">
-          <div style="font-size:13px;color:#cfc6f5;line-height:1.55">এই ঘরে খুব ব্যক্তিগত তথ্য আছে। তোমার অনুমতির পরেই AI বিশ্লেষণ শুরু হবে।</div>
+      <div id="privateOpen" class="private-content">
+        <div class="card-purple mb14" style="font-size:13px;color:#c0b8f0;line-height:1.55">এই ঘরে খুব ব্যক্তিগত তথ্য আছে। তোমার অনুমতির পরেই AI বিশ্লেষণ শুরু হবে।</div>
+        <div class="card priv-entry mb8"><div class="priv-date">২৫ জুন, গভীর রাত</div><div class="priv-text">আজ নিজেকে নিয়ে গর্ব হলো। তর্কের সময় প্রতিক্রিয়া না করে শান্ত ছিলাম।</div></div>
+        <div class="card priv-entry mb8"><div class="priv-date">২১ জুন</div><div class="priv-text">সব ঠিক থাকলেও টাকা নিয়ে দুশ্চিন্তা হয়। এই ভয়টা আরও ভালো করে বুঝতে চাই।</div></div>
+        <div class="card priv-entry mb14"><div class="priv-date">১৪ জুন</div><div class="priv-text">একটা নীরব ভাবনা, যা এখনো কারো সাথে শেয়ার করতে প্রস্তুত নই।</div></div>
+        <div class="g2 mb8">
+          <div class="action-tile"><div class="action-glyph">✎</div><div class="action-label">ব্যক্তিগত নোট যোগ করো</div></div>
+          <div class="action-tile"><div class="action-glyph">🎙</div><div class="action-label">কণ্ঠ ভাবনা</div></div>
+          <div class="action-tile"><div class="action-glyph">◳</div><div class="action-label">ব্যক্তিগত ছবি</div></div>
+          <div class="action-tile"><div class="action-glyph">✦</div><div class="action-label">AI পর্যালোচনা</div></div>
         </div>
-
-        <div class="card private-entry mb-10">
-          <div class="private-date">২৫ জুন, গভীর রাত</div>
-          <div class="private-text">আজ নিজেকে নিয়ে গর্ব হলো। তর্কের সময় প্রতিক্রিয়া না করে শান্ত ছিলাম।</div>
-        </div>
-        <div class="card private-entry mb-10">
-          <div class="private-date">২১ জুন</div>
-          <div class="private-text">সব ঠিক থাকলেও টাকা নিয়ে দুশ্চিন্তা হয়। এই ভয়টা আরও ভালো করে বুঝতে চাই।</div>
-        </div>
-        <div class="card private-entry mb-14">
-          <div class="private-date">১৪ জুন</div>
-          <div class="private-text">একটা নীরব ভাবনা, যা এখনো কারো সাথে শেয়ার করতে প্রস্তুত নই।</div>
-        </div>
-
-        <div class="grid-2 mb-10">
-          <div class="card-dark" style="cursor:pointer;display:flex;align-items:center;gap:10px">
-            <span>✎</span><span style="font-size:14px;color:#e9e6dc">ব্যক্তিগত নোট যোগ করো</span>
-          </div>
-          <div class="card-dark" style="cursor:pointer;display:flex;align-items:center;gap:10px">
-            <span>🎙</span><span style="font-size:14px;color:#e9e6dc">কণ্ঠ ভাবনা</span>
-          </div>
-          <div class="card-dark" style="cursor:pointer;display:flex;align-items:center;gap:10px">
-            <span>◳</span><span style="font-size:14px;color:#e9e6dc">ব্যক্তিগত ছবি</span>
-          </div>
-          <div class="card-dark" style="cursor:pointer;display:flex;align-items:center;gap:10px">
-            <span>✦</span><span style="font-size:14px;color:#e9e6dc">AI পর্যালোচনা অনুমতি দাও</span>
-          </div>
-        </div>
-
-        <button class="btn-outline" onclick="lockPrivate()">ঘর তালা দাও</button>
+        <button class="btn-ghost" onclick="lockPrivate()">ঘর তালা দাও</button>
       </div>
     </div>
 
-    <!-- ======== SECURITY SCREEN ======== -->
+    <!-- ══════════════ SECURITY ══════════════ -->
     <div class="screen" id="screen-security">
-      <div class="screen-header" style="padding-bottom:16px">
-        <div class="screen-date" style="letter-spacing:.06em">তুমিই নিয়ন্ত্রণে</div>
-        <div class="screen-title" style="font-size:30px;margin-top:4px">নিরাপত্তা ও অনুমতি</div>
+      <div class="page-head">
+        <div class="page-eyebrow">তুমিই নিয়ন্ত্রণে</div>
+        <div class="page-title" style="font-size:28px">নিরাপত্তা ও অনুমতি</div>
       </div>
-
-      <div class="card-green mb-14">
-        <div style="display:flex;gap:12px;align-items:center">
-          <span style="font-size:18px">🛡</span>
-          <div style="font-size:14px;color:#9bd8b3;line-height:1.5">তোমার তথ্য তোমার ব্যক্তিগত জায়গায় থাকে। কিছুই শেয়ার হয় না।</div>
+      <div class="card-teal mb14">
+        <div class="flex-ai" style="gap:10px;align-items:center">
+          <span style="font-size:20px">🛡</span>
+          <div style="font-size:13px;color:#80d8b8;line-height:1.5">তোমার তথ্য তোমার ব্যক্তিগত জায়গায় থাকে। কিছুই শেয়ার হয় না।</div>
         </div>
       </div>
-
-      <!-- Toggles -->
-      <div id="togglesArea">
-        <div class="toggle-row">
-          <div class="toggle-info">
-            <div class="toggle-label">ফেস / ফিঙ্গারপ্রিন্ট দিয়ে খোলো</div>
-            <div class="toggle-desc">ব্যক্তিগত ঘর খুলতে বায়োমেট্রিক ব্যবহার করো।</div>
-          </div>
-          <div class="toggle-track" style="background:#c9a24b" onclick="toggleSwitch(this)">
-            <div class="toggle-knob" style="left:23px"></div>
-          </div>
-        </div>
-        <div class="toggle-row">
-          <div class="toggle-info">
-            <div class="toggle-label">AI–কে নতুন স্মৃতি প্রস্তাব করতে দাও</div>
-            <div class="toggle-desc">AI প্রস্তাব দিতে পারে, তবে সংরক্ষণের আগে সবসময় জিজ্ঞেস করে।</div>
-          </div>
-          <div class="toggle-track" style="background:#c9a24b" onclick="toggleSwitch(this)">
-            <div class="toggle-knob" style="left:23px"></div>
-          </div>
-        </div>
-        <div class="toggle-row">
-          <div class="toggle-info">
-            <div class="toggle-label">ব্যক্তিগত ঘর তালা দাও</div>
-            <div class="toggle-desc">খোলার আগে সবসময় পিন চাও।</div>
-          </div>
-          <div class="toggle-track" style="background:#c9a24b" onclick="toggleSwitch(this)">
-            <div class="toggle-knob" style="left:23px"></div>
-          </div>
-        </div>
-        <div class="toggle-row">
-          <div class="toggle-info">
-            <div class="toggle-label">নিরাপদ ভল্ট তালা দাও</div>
-            <div class="toggle-desc">সর্বোচ্চ সুরক্ষা। স্বয়ংক্রিয় শেয়ার নেই।</div>
-          </div>
-          <div class="toggle-track" style="background:#c9a24b" onclick="toggleSwitch(this)">
-            <div class="toggle-knob" style="left:23px"></div>
-          </div>
-        </div>
-        <div class="toggle-row" style="margin-bottom:16px">
-          <div class="toggle-info">
-            <div class="toggle-label">গুগল সিঙ্ক অনুমতি দাও</div>
-            <div class="toggle-desc">শুধু ক্যালেন্ডার ও যোগাযোগ সিঙ্ক করো।</div>
-          </div>
-          <div class="toggle-track" style="background:rgba(255,255,255,0.12)" onclick="toggleSwitch(this)">
-            <div class="toggle-knob" style="left:3px"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Actions -->
-      <div class="sec-action" style="border:1px solid rgba(255,255,255,0.08)">
-        <span style="font-size:16px">⇪</span>
-        <span style="flex:1;font-size:15px;color:#f4f2ec">আমার তথ্য রপ্তানি করো</span>
-        <span class="sa-arrow">›</span>
-      </div>
-      <div class="sec-action" style="border:1px solid rgba(255,255,255,0.08)">
-        <span style="font-size:16px">◷</span>
-        <span style="flex:1;font-size:15px;color:#f4f2ec">স্মৃতি অনুমোদন নিয়ম</span>
-        <span class="sa-arrow">›</span>
-      </div>
-      <div class="sec-action" style="border:1px solid rgba(255,255,255,0.08)">
-        <span style="font-size:16px">◉</span>
-        <span style="flex:1;font-size:15px;color:#f4f2ec">গুগল সংযোগ অনুমতি</span>
-        <span class="sa-arrow">›</span>
-      </div>
-      <div class="sec-action" style="border:1px solid rgba(196,116,72,0.3)">
-        <span style="font-size:16px">🗑</span>
-        <span style="flex:1;font-size:15px;color:#d98a5a">আমার সব তথ্য মুছে ফেলো</span>
-        <span class="sa-arrow">›</span>
-      </div>
+      <div class="toggle-row"><div class="toggle-info"><div class="toggle-label">ফেস / ফিঙ্গারপ্রিন্ট দিয়ে খোলো</div><div class="toggle-desc">ব্যক্তিগত ঘর খুলতে বায়োমেট্রিক।</div></div><div class="toggle-track" style="background:var(--gold)" onclick="toggleSwitch(this)"><div class="toggle-knob" style="left:23px"></div></div></div>
+      <div class="toggle-row"><div class="toggle-info"><div class="toggle-label">AI–কে স্মৃতি প্রস্তাব করতে দাও</div><div class="toggle-desc">AI প্রস্তাব করে, রাখার আগে অনুমতি নেয়।</div></div><div class="toggle-track" style="background:var(--gold)" onclick="toggleSwitch(this)"><div class="toggle-knob" style="left:23px"></div></div></div>
+      <div class="toggle-row"><div class="toggle-info"><div class="toggle-label">ব্যক্তিগত ঘর তালা দাও</div><div class="toggle-desc">খোলার আগে সবসময় পিন চাও।</div></div><div class="toggle-track" style="background:var(--gold)" onclick="toggleSwitch(this)"><div class="toggle-knob" style="left:23px"></div></div></div>
+      <div class="toggle-row"><div class="toggle-info"><div class="toggle-label">নিরাপদ ভল্ট তালা দাও</div><div class="toggle-desc">সর্বোচ্চ সুরক্ষা। স্বয়ংক্রিয় শেয়ার নেই।</div></div><div class="toggle-track" style="background:var(--gold)" onclick="toggleSwitch(this)"><div class="toggle-knob" style="left:23px"></div></div></div>
+      <div class="toggle-row" style="margin-bottom:16px"><div class="toggle-info"><div class="toggle-label">গুগল সিঙ্ক অনুমতি দাও</div><div class="toggle-desc">শুধু ক্যালেন্ডার ও যোগাযোগ সিঙ্ক।</div></div><div class="toggle-track" style="background:rgba(255,255,255,0.1)" onclick="toggleSwitch(this)"><div class="toggle-knob" style="left:3px"></div></div></div>
+      <div class="sec-row" style="border:1px solid var(--border)"><span style="font-size:16px">⇪</span><span style="flex:1;font-size:14px;color:var(--t1)">আমার তথ্য রপ্তানি করো</span><span class="sec-arrow">›</span></div>
+      <div class="sec-row" style="border:1px solid var(--border)"><span style="font-size:16px">◷</span><span style="flex:1;font-size:14px;color:var(--t1)">স্মৃতি অনুমোদন নিয়ম</span><span class="sec-arrow">›</span></div>
+      <div class="sec-row" style="border:1px solid var(--border)"><span style="font-size:16px">◉</span><span style="flex:1;font-size:14px;color:var(--t1)">গুগল সংযোগ অনুমতি</span><span class="sec-arrow">›</span></div>
+      <div class="sec-row" style="border:1px solid rgba(224,128,96,0.3)"><span style="font-size:16px">🗑</span><span style="flex:1;font-size:14px;color:var(--amber)">আমার সব তথ্য মুছে ফেলো</span><span class="sec-arrow">›</span></div>
     </div>
 
-    <!-- ======== VAULT SCREEN (placeholder) ======== -->
+    <!-- ══════════════ PLACEHOLDER SCREENS ══════════════ -->
     <div class="screen" id="screen-vault">
-      <div class="screen-header-row">
-        <div>
-          <div class="screen-date">সর্বোচ্চ সুরক্ষা</div>
-          <div class="screen-title" style="font-size:32px;margin-top:4px">নিরাপদ ভল্ট</div>
-        </div>
-        <button class="back-btn" onclick="navigate('rooms')">ঘর</button>
-      </div>
-      <div class="lock-box">
-        <div class="lock-icon">🛡</div>
-        <div class="lock-title">এই ভল্ট তালাবদ্ধ</div>
-        <div class="lock-desc">আর্থিক নথি, পরিচয়পত্র, ব্যক্তিগত ছবি — সব এখানে সবচেয়ে নিরাপদে থাকে।</div>
-        <div class="lock-hint" style="margin-top:24px;font-size:13px;color:#7a7a88">শীঘ্রই পাওয়া যাবে</div>
-      </div>
+      <div class="page-head-row"><div><div class="page-eyebrow">সর্বোচ্চ সুরক্ষা</div><div class="page-title" style="font-size:30px">নিরাপদ ভল্ট</div></div><button class="back-btn" onclick="navigate('rooms')">ঘর</button></div>
+      <div class="card" style="text-align:center;padding:48px 20px"><div style="font-size:40px;margin-bottom:16px">🛡</div><div style="font-size:16px;color:var(--t1);font-weight:600;margin-bottom:8px">ভল্ট আসছে</div><div style="font-size:13px;color:var(--t3);line-height:1.6">আর্থিক নথি, পরিচয়পত্র, ব্যক্তিগত ছবি — সব এখানে।</div></div>
     </div>
-
-    <!-- ======== WORK SCREEN (placeholder) ======== -->
     <div class="screen" id="screen-work">
-      <div class="screen-header-row">
-        <div>
-          <div class="screen-date">কাজ ও ভেন্ডর</div>
-          <div class="screen-title" style="font-size:32px;margin-top:4px">কাজ কেন্দ্র</div>
-        </div>
-        <button class="back-btn" onclick="navigate('rooms')">ঘর</button>
-      </div>
-      <div class="card" style="text-align:center;padding:40px 20px">
-        <div style="font-size:32px;margin-bottom:16px">▤</div>
-        <div style="font-size:16px;color:#f4f2ec;font-weight:600;margin-bottom:8px">কাজ কেন্দ্র আসছে</div>
-        <div style="font-size:14px;color:#7a7a88;line-height:1.6">অফিস কাজ, ভেন্ডর, কোটেশন, মিটিং — সব এক জায়গায়।</div>
-      </div>
+      <div class="page-head-row"><div><div class="page-eyebrow">কাজ ও ভেন্ডর</div><div class="page-title" style="font-size:30px">কাজ কেন্দ্র</div></div><button class="back-btn" onclick="navigate('rooms')">ঘর</button></div>
+      <div class="card" style="text-align:center;padding:48px 20px"><div style="font-size:40px;margin-bottom:16px">▤</div><div style="font-size:16px;color:var(--t1);font-weight:600;margin-bottom:8px">কাজ কেন্দ্র আসছে</div><div style="font-size:13px;color:var(--t3);line-height:1.6">অফিস কাজ, ভেন্ডর, কোটেশন, মিটিং।</div></div>
     </div>
-
-    <!-- ======== PHOTOS SCREEN (placeholder) ======== -->
     <div class="screen" id="screen-photos">
-      <div class="screen-header-row">
-        <div>
-          <div class="screen-date">ফাইল ও স্মৃতি</div>
-          <div class="screen-title" style="font-size:32px;margin-top:4px">ছবি ও নথি</div>
-        </div>
-        <button class="back-btn" onclick="navigate('rooms')">ঘর</button>
-      </div>
-      <div class="card" style="text-align:center;padding:40px 20px">
-        <div style="font-size:32px;margin-bottom:16px">▣</div>
-        <div style="font-size:16px;color:#f4f2ec;font-weight:600;margin-bottom:8px">লাইব্রেরি আসছে</div>
-        <div style="font-size:14px;color:#7a7a88;line-height:1.6">পরিবারের ছবি, কাজের নথি, জীবনের স্মৃতি — সব এক জায়গায়।</div>
-      </div>
+      <div class="page-head-row"><div><div class="page-eyebrow">ফাইল ও স্মৃতি</div><div class="page-title" style="font-size:30px">ছবি ও নথি</div></div><button class="back-btn" onclick="navigate('rooms')">ঘর</button></div>
+      <div class="card" style="text-align:center;padding:48px 20px"><div style="font-size:40px;margin-bottom:16px">▣</div><div style="font-size:16px;color:var(--t1);font-weight:600;margin-bottom:8px">লাইব্রেরি আসছে</div><div style="font-size:13px;color:var(--t3);line-height:1.6">পরিবারের ছবি, কাজের নথি, জীবনের স্মৃতি।</div></div>
     </div>
-
-    <!-- ======== GOOGLE SCREEN (placeholder) ======== -->
     <div class="screen" id="screen-google">
-      <div class="screen-header-row">
-        <div>
-          <div class="screen-date">যুক্ত সেবাসমূহ</div>
-          <div class="screen-title" style="font-size:32px;margin-top:4px">গুগল কেন্দ্র</div>
-        </div>
-        <button class="back-btn" onclick="navigate('rooms')">ঘর</button>
-      </div>
-      <div class="card" style="text-align:center;padding:40px 20px">
-        <div style="font-size:32px;margin-bottom:16px">◉</div>
-        <div style="font-size:16px;color:#f4f2ec;font-weight:600;margin-bottom:8px">গুগল সংযোগ আসছে</div>
-        <div style="font-size:14px;color:#7a7a88;line-height:1.6">জিমেইল, ক্যালেন্ডার, ড্রাইভ, ফটোস — সব নিরাপদে যুক্ত করো।</div>
-      </div>
+      <div class="page-head-row"><div><div class="page-eyebrow">যুক্ত সেবাসমূহ</div><div class="page-title" style="font-size:30px">গুগল কেন্দ্র</div></div><button class="back-btn" onclick="navigate('rooms')">ঘর</button></div>
+      <div class="card" style="text-align:center;padding:48px 20px"><div style="font-size:40px;margin-bottom:16px">◉</div><div style="font-size:16px;color:var(--t1);font-weight:600;margin-bottom:8px">গুগল সংযোগ আসছে</div><div style="font-size:13px;color:var(--t3);line-height:1.6">জিমেইল, ক্যালেন্ডার, ড্রাইভ, ফটোস।</div></div>
     </div>
-
-    <!-- ======== RISK SCREEN (placeholder) ======== -->
     <div class="screen" id="screen-risk">
-      <div class="screen-header-row">
-        <div>
-          <div class="screen-date">নরম সতর্কতা</div>
-          <div class="screen-title" style="font-size:32px;margin-top:4px">ঝুঁকি সতর্কতা</div>
-        </div>
-        <button class="back-btn" onclick="navigate('rooms')">ঘর</button>
-      </div>
-      <div class="card-warning mb-10">
-        <div class="flex-ai">
-          <div class="warn-icon">!</div>
-          <div>
-            <div class="warn-title">ঘুম ঝুঁকি</div>
-            <div class="warn-desc">পর পর ৩ দিন কম ঘুম হচ্ছে। আজ রাতে একটু আগে বিশ্রামের চেষ্টা করো।</div>
-          </div>
-        </div>
-      </div>
-      <div class="card-warning mb-10">
-        <div class="flex-ai">
-          <div class="warn-icon">!</div>
-          <div>
-            <div class="warn-title">কাজের চাপ বেশি</div>
-            <div class="warn-desc">এই সপ্তাহে কাজের চাপ স্বাভাবিকের চেয়ে বেশি। একটু বিরতি নাও।</div>
-          </div>
-        </div>
-      </div>
-      <div class="card-warning">
-        <div class="flex-ai">
-          <div class="warn-icon">!</div>
-          <div>
-            <div class="warn-title">একটি গুরুত্বপূর্ণ কাজ পিছিয়ে গেছে</div>
-            <div class="warn-desc">বিদ্যুৎ বিল এখনো দেওয়া হয়নি। আজকেই করে ফেলো।</div>
-          </div>
-        </div>
-      </div>
+      <div class="page-head-row"><div><div class="page-eyebrow">নরম সতর্কতা</div><div class="page-title" style="font-size:30px">ঝুঁকি সতর্কতা</div></div><button class="back-btn" onclick="navigate('rooms')">ঘর</button></div>
+      <div class="card-amber mb10"><div class="flex-ai"><div class="risk-icon">!</div><div><div class="risk-title">ঘুম ঝুঁকি</div><div class="risk-desc">পর পর ৩ দিন কম ঘুম হচ্ছে। আজ রাতে একটু আগে বিশ্রামের চেষ্টা করো।</div></div></div></div>
+      <div class="card-amber mb10"><div class="flex-ai"><div class="risk-icon">!</div><div><div class="risk-title">কাজের চাপ বেশি</div><div class="risk-desc">এই সপ্তাহে কাজের চাপ স্বাভাবিকের চেয়ে বেশি। একটু বিরতি নাও।</div></div></div></div>
+      <div class="card-amber"><div class="flex-ai"><div class="risk-icon">!</div><div><div class="risk-title">গুরুত্বপূর্ণ কাজ পিছিয়ে গেছে</div><div class="risk-desc">বিদ্যুৎ বিল এখনো দেওয়া হয়নি। আজকেই করে ফেলো।</div></div></div></div>
     </div>
-
-    <!-- ======== REPORTS SCREEN (placeholder) ======== -->
     <div class="screen" id="screen-reports">
-      <div class="screen-header-row">
-        <div>
-          <div class="screen-date">সাপ্তাহিক ও মাসিক</div>
-          <div class="screen-title" style="font-size:32px;margin-top:4px">জীবন রিপোর্ট</div>
-        </div>
-        <button class="back-btn" onclick="navigate('rooms')">ঘর</button>
-      </div>
-      <div class="card" style="text-align:center;padding:40px 20px">
-        <div style="font-size:32px;margin-bottom:16px">◷</div>
-        <div style="font-size:16px;color:#f4f2ec;font-weight:600;margin-bottom:8px">রিপোর্ট আসছে</div>
-        <div style="font-size:14px;color:#7a7a88;line-height:1.6">দৈনিক, সাপ্তাহিক ও মাসিক জীবন বিশ্লেষণ এখানে থাকবে।</div>
-      </div>
+      <div class="page-head-row"><div><div class="page-eyebrow">সাপ্তাহিক ও মাসিক</div><div class="page-title" style="font-size:30px">জীবন রিপোর্ট</div></div><button class="back-btn" onclick="navigate('rooms')">ঘর</button></div>
+      <div class="card" style="text-align:center;padding:48px 20px"><div style="font-size:40px;margin-bottom:16px">◷</div><div style="font-size:16px;color:var(--t1);font-weight:600;margin-bottom:8px">রিপোর্ট আসছে</div><div style="font-size:13px;color:var(--t3);line-height:1.6">দৈনিক, সাপ্তাহিক ও মাসিক জীবন বিশ্লেষণ।</div></div>
     </div>
 
-  </div><!-- /scroll-area -->
+  </div><!-- /scroll -->
 
   <!-- BOTTOM NAV -->
-  <nav class="bottom-nav">
+  <nav class="bottom-nav" role="navigation">
+    <div class="nav-bg"></div>
     <button class="nav-tab active" data-screen="today" onclick="navigate('today')">
+      <span class="nav-dot"></span>
       <span class="nav-glyph">◇</span>
-      <span class="nav-label">আজ</span>
+      <span class="nav-lbl">আজ</span>
     </button>
     <button class="nav-tab" data-screen="talk" onclick="navigate('talk')">
+      <span class="nav-dot"></span>
       <span class="nav-glyph">✦</span>
-      <span class="nav-label">আলাপ</span>
+      <span class="nav-lbl">আলাপ</span>
     </button>
     <button class="nav-tab" data-screen="record" onclick="navigate('record')">
+      <span class="nav-dot"></span>
       <span class="nav-glyph">✎</span>
-      <span class="nav-label">রেকর্ড</span>
+      <span class="nav-lbl">রেকর্ড</span>
     </button>
     <button class="nav-tab" data-screen="rooms" onclick="navigate('rooms')">
+      <span class="nav-dot"></span>
       <span class="nav-glyph">▦</span>
-      <span class="nav-label">ঘর</span>
+      <span class="nav-lbl">ঘর</span>
     </button>
     <button class="nav-tab" data-screen="security" onclick="navigate('security')">
+      <span class="nav-dot"></span>
       <span class="nav-glyph">⛉</span>
-      <span class="nav-label">নিরাপদ</span>
+      <span class="nav-lbl">নিরাপদ</span>
     </button>
   </nav>
+
+  <!-- INSTALL BANNER -->
+  <div id="installBanner">
+    <div class="install-icon">R</div>
+    <div style="flex:1">
+      <div class="install-txt-title">Royal Brain OS ইনস্টল করো</div>
+      <div class="install-txt-sub">হোম স্ক্রিনে অ্যাপের মতো চলবে</div>
+    </div>
+    <button class="btn-install" onclick="installApp()">ইনস্টল</button>
+    <button class="btn-close-banner" onclick="this.closest('#installBanner').classList.remove('show')">×</button>
+  </div>
 
 </div><!-- /phone -->
 
 <script>
-// ---- NAVIGATION ----
+// ── NAVIGATION ──
 const roomScreens = ['memory','family','decision','finance','private','vault','people','work','photos','google','risk','reports'];
 
 function navigate(screen) {
-  // hide all screens
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  // show target
-  const target = document.getElementById('screen-' + screen);
-  if (target) target.classList.add('active');
-  // scroll to top
+  const t = document.getElementById('screen-' + screen);
+  if (t) t.classList.add('active');
   document.getElementById('scrollArea').scrollTop = 0;
-  // update nav tabs
   const navKey = roomScreens.includes(screen) ? 'rooms' : screen;
   document.querySelectorAll('.nav-tab').forEach(tab => {
     tab.classList.toggle('active', tab.dataset.screen === navKey);
   });
 }
 
-// ---- CLOCK ----
+// ── CLOCK ──
 function updateClock() {
   const bn = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+  const tobn = n => String(n).split('').map(c => bn[+c]||c).join('');
   const now = new Date();
   const h = now.getHours() % 12 || 12;
   const m = now.getMinutes().toString().padStart(2,'0');
-  const tobn = n => String(n).split('').map(c => bn[+c]||c).join('');
   document.getElementById('clock').textContent = tobn(h) + ':' + tobn(m);
 }
 updateClock();
 setInterval(updateClock, 30000);
 
-// ---- TODAY DATE ----
+// ── DATE ──
 (function() {
-  const days = ['রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার','শনিবার'];
+  const days   = ['রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার','শনিবার'];
   const months = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
   const bn = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
   const tobn = n => String(n).split('').map(c=>bn[+c]||c).join('');
   const now = new Date();
-  document.getElementById('todayDate').textContent =
-    days[now.getDay()] + ' · ' + tobn(now.getDate()) + ' ' + months[now.getMonth()];
+  const txt = days[now.getDay()] + ' · ' + tobn(now.getDate()) + ' ' + months[now.getMonth()];
+  ['todayDate','recordDate'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = txt; });
 })();
 
-// ---- AI TALK ----
+// ── CHAT ──
 function sendMessage() {
   const input = document.getElementById('chatInput');
   const text = input.value.trim();
   if (!text) return;
   const area = document.getElementById('messagesArea');
-  // user bubble
-  const userBubble = document.createElement('div');
-  userBubble.className = 'msg-user';
-  userBubble.textContent = text;
-  area.appendChild(userBubble);
-  // AI reply
-  const aiBubble = document.createElement('div');
-  aiBubble.className = 'msg-ai';
-  aiBubble.innerHTML = '<div class="msg-ai-label">রয়্যাল ব্রেইন</div><div class="msg-ai-text">শেয়ার করার জন্য ধন্যবাদ। তুমি কেমন অনুভব করছ তা আমি টুকে রাখলাম। এটা কি তোমার দীর্ঘমেয়াদি স্মৃতিতে রাখব?</div>';
-  area.appendChild(aiBubble);
+  const u = document.createElement('div');
+  u.className = 'msg-user';
+  u.textContent = text;
+  area.appendChild(u);
+  const a = document.createElement('div');
+  a.className = 'msg-ai';
+  a.innerHTML = '<div class="msg-ai-label">রয়্যাল ব্রেইন</div><div class="msg-ai-text">শেয়ার করার জন্য ধন্যবাদ। তুমি কেমন অনুভব করছ তা আমি টুকে রাখলাম। এটা কি তোমার দীর্ঘমেয়াদি স্মৃতিতে রাখব?</div>';
+  area.appendChild(a);
   input.value = '';
   area.scrollTop = area.scrollHeight;
   document.getElementById('savePrompt').classList.add('show');
 }
+document.getElementById('chatInput').addEventListener('keydown', e => { if(e.key==='Enter') sendMessage(); });
+function confirmSave() { document.getElementById('savePrompt').classList.remove('show'); showToast('talkToast','স্মৃতিতে রাখা হয়েছে।'); }
+function dismissSave() { document.getElementById('savePrompt').classList.remove('show'); showToast('talkToast','ব্যক্তিগত রাখা হলো।'); }
 
-document.getElementById('chatInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') sendMessage();
-});
-
-function confirmSave() {
-  document.getElementById('savePrompt').classList.remove('show');
-  showTalkToast('স্মৃতিতে রাখা হয়েছে।');
-}
-function dismissSave() {
-  document.getElementById('savePrompt').classList.remove('show');
-  showTalkToast('ব্যক্তিগত রাখা হলো। সংরক্ষণ করা হয়নি।');
-}
-
-function showTalkToast(msg) { showToast('talkToast', msg); }
-function showMemToast(msg) { showToast('memToast', msg); }
-function showRecordToast(msg) { showToast('recordToast', msg); }
-
+// ── TOAST ──
 function showToast(id, msg) {
   const el = document.getElementById(id);
   el.textContent = msg;
   el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2200);
+  setTimeout(() => el.classList.remove('show'), 2400);
 }
 
-// ---- DAILY RECORD ----
-function selectLevel(btn, field, idx, tier) {
-  // tier: 'low','mid','high'
-  const parent = btn.closest('.level-options');
-  parent.querySelectorAll('.level-opt').forEach(b => {
-    b.classList.remove('sel-low','sel-mid','sel-high');
-  });
+// ── RECORD ──
+function pickLevel(btn, tier) {
+  btn.closest('.level-opts').querySelectorAll('.level-opt').forEach(b => b.classList.remove('sel-low','sel-mid','sel-high'));
   btn.classList.add('sel-' + tier);
 }
+function saveRecord() { showToast('recordToast','আজকের রেকর্ড সংরক্ষিত হয়েছে। দারুণ।'); }
 
-function saveRecord() {
-  showRecordToast('আজকের রেকর্ড সংরক্ষিত হয়েছে। দারুণ।');
-}
-
-// ---- PRIVATE ROOM PIN ----
+// ── PIN ──
 let pinLen = 0;
-
-function pressKey(label) {
-  if (label === '⌫') {
-    pinLen = Math.max(0, pinLen - 1);
-  } else if (label === '') {
-    return;
-  } else {
-    pinLen = Math.min(4, pinLen + 1);
-    if (pinLen === 4) {
-      setTimeout(() => {
-        document.getElementById('privateLockScreen').style.display = 'none';
-        document.getElementById('privateOpenContent').classList.add('open');
-        pinLen = 0;
-        updatePinDots();
-      }, 180);
-    }
+function pressKey(k) {
+  if (k==='⌫') { pinLen = Math.max(0,pinLen-1); }
+  else if (k==='') { return; }
+  else {
+    pinLen = Math.min(4,pinLen+1);
+    if (pinLen===4) { setTimeout(unlockPrivate,200); return; }
   }
-  updatePinDots();
+  updateDots();
 }
-
-function updatePinDots() {
-  for (let i = 0; i < 4; i++) {
-    document.getElementById('dot' + i).classList.toggle('filled', i < pinLen);
-  }
+function updateDots() {
+  for(let i=0;i<4;i++) document.getElementById('dot'+i).classList.toggle('filled',i<pinLen);
 }
-
+function unlockPrivate() {
+  document.getElementById('privateLock').style.display = 'none';
+  document.getElementById('privateOpen').classList.add('open');
+  pinLen = 0; updateDots();
+}
 function lockPrivate() {
-  pinLen = 0;
-  updatePinDots();
-  document.getElementById('privateLockScreen').style.display = '';
-  document.getElementById('privateOpenContent').classList.remove('open');
+  pinLen = 0; updateDots();
+  document.getElementById('privateLock').style.display = '';
+  document.getElementById('privateOpen').classList.remove('open');
 }
 
-// ---- SECURITY TOGGLES ----
+// ── TOGGLES ──
 function toggleSwitch(track) {
   const knob = track.querySelector('.toggle-knob');
-  const isOn = knob.style.left === '23px';
-  if (isOn) {
-    track.style.background = 'rgba(255,255,255,0.12)';
-    knob.style.left = '3px';
-  } else {
-    track.style.background = '#c9a24b';
-    knob.style.left = '23px';
-  }
+  const on = knob.style.left === '23px';
+  track.style.background = on ? 'rgba(255,255,255,0.1)' : 'var(--gold)';
+  knob.style.left = on ? '3px' : '23px';
 }
 
-// ---- PWA: SERVICE WORKER ----
+// ── PWA ──
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {});
-  });
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
 }
-
-// ---- PWA: INSTALL PROMPT ----
 let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
-  document.getElementById('installBanner').style.display = 'flex';
+  document.getElementById('installBanner').classList.add('show');
 });
-window.addEventListener('appinstalled', () => {
-  document.getElementById('installBanner').style.display = 'none';
-});
-
+window.addEventListener('appinstalled', () => document.getElementById('installBanner').classList.remove('show'));
 function installApp() {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(() => {
-      deferredPrompt = null;
-      document.getElementById('installBanner').style.display = 'none';
-    });
-  }
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(() => { deferredPrompt = null; document.getElementById('installBanner').classList.remove('show'); });
 }
 </script>
-
-<!-- Install Banner -->
-<div id="installBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#1d1830,#14131c);border-top:1px solid rgba(201,162,75,0.35);padding:14px 20px;z-index:9999;align-items:center;gap:14px;font-family:'Hind Siliguri',sans-serif;">
-  <div style="width:38px;height:38px;border-radius:10px;background:#c9a24b;display:flex;align-items:center;justify-content:center;font-weight:700;color:#0c0c12;font-size:18px;flex:0 0 38px">R</div>
-  <div style="flex:1">
-    <div style="font-size:14px;font-weight:600;color:#f4f2ec">Royal Brain OS ইনস্টল করো</div>
-    <div style="font-size:12px;color:#8a8a98;margin-top:2px">হোম স্ক্রিনে অ্যাপের মতো চলবে</div>
-  </div>
-  <button onclick="installApp()" style="background:#c9a24b;color:#0c0c12;border:none;border-radius:10px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Hind Siliguri',sans-serif;">ইনস্টল</button>
-  <button onclick="document.getElementById('installBanner').style.display='none'" style="background:none;border:none;color:#7a7a88;font-size:20px;cursor:pointer;padding:4px">×</button>
-</div>
 </body>
 </html>
